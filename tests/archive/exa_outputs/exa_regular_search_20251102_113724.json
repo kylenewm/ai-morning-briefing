@@ -1,0 +1,88 @@
+{
+  "query": "Recent AI product updates (past 24-96h) for AI PMs: voice-to-voice models, conversational AI platforms, foundation model releases, AI agents, enterprise deployments, pricing changes. Focus on announcements, case studies, benchmarks.",
+  "timestamp": "20251102_113724",
+  "mode": "regular_search",
+  "num_results": 10,
+  "results": [
+    {
+      "rank": 1,
+      "title": "GenAi Today",
+      "url": "https://www.genaitoday.ai/listall.aspx",
+      "published_date": "2025-11-02T00:00:00.000Z",
+      "author": null,
+      "score": null
+    },
+    {
+      "rank": 2,
+      "title": "Mosaic AI Announcements at Data + AI Summit 2025",
+      "url": "https://databricks.com/blog/mosaic-ai-announcements-data-ai-summit-2025",
+      "published_date": "2025-11-06T00:00:00.000Z",
+      "author": null,
+      "score": null
+    },
+    {
+      "rank": 3,
+      "title": "What's new in Azure AI Foundry Agent Service? - Azure AI Foundry",
+      "url": "https://learn.microsoft.com/en-us/azure/ai-foundry/agents/whats-new",
+      "published_date": "2025-11-07T00:00:00.000Z",
+      "author": "aahill",
+      "score": null
+    },
+    {
+      "rank": 4,
+      "title": "Cursor 2.0 and Composer: how a multi-agent rethink surprised AI coding - CometAPI - All AI Models in One API",
+      "url": "https://www.cometapi.com/cursor-2-0-what-changed-and-why-it-matters/",
+      "published_date": "2025-10-30T00:00:00.000Z",
+      "author": "anna",
+      "score": null
+    },
+    {
+      "rank": 5,
+      "title": "How can PMs leverage LangChain & LangGraph 1.0 for flexible orchestration and improved agent middleware in AI projects?",
+      "url": "https://genaipm.com/ai-pm-insights/how-can-pms-leverage-langchain-langgraph-10-for-flexible-orchestration-and-impro",
+      "published_date": "2025-10-29T00:00:00.000Z",
+      "author": null,
+      "score": null
+    },
+    {
+      "rank": 6,
+      "title": "Dust Product Update 18: Frames, Voice Input, Deep Dive & More",
+      "url": "https://blog.dust.tt/dust-product-update-17-2/",
+      "published_date": "2025-10-29T00:00:00.000Z",
+      "author": "Pauline Pham",
+      "score": null
+    },
+    {
+      "rank": 7,
+      "title": "\ud83e\udd16Microsoft introduces Mico, \ud83c\udf10OpenAI launches Atlas browser, \ud83e\udde0Claude adds project memory, \ud83d\udcbc ChatGPT gets company knowledge",
+      "url": "https://www.linkedin.com/pulse/microsoft-introduces-mico-openai-launches-atlas-browser-tiigem%C3%A4e-zpt8f",
+      "published_date": "2025-10-27T00:00:00.000Z",
+      "author": "Gerlyn Tiigem\u00e4e",
+      "score": null
+    },
+    {
+      "rank": 8,
+      "title": "ChatGPT Business - Release Notes | OpenAI Help Center",
+      "url": "https://help.openai.com/de-de/articles/11391654-chatgpt-business-release-notes",
+      "published_date": "2025-10-31T00:00:00.000Z",
+      "author": null,
+      "score": null
+    },
+    {
+      "rank": 9,
+      "title": "Google Conference Call: AI commercialization fully realized, cloud business backlog orders surged by 46%, Gemini monthly active users exceeded 650 million",
+      "url": "https://longbridge.com/en/news/263416083",
+      "published_date": "2025-10-30T00:00:00.000Z",
+      "author": null,
+      "score": null
+    },
+    {
+      "rank": 10,
+      "title": "Claude Skills Tutorial: AI Update #1",
+      "url": "https://www.news.aakashg.com/p/claude-skills-tutorial",
+      "published_date": "2025-10-30T00:00:00.000Z",
+      "author": "Aakash Gupta",
+      "score": null
+    }
+  ]
+}

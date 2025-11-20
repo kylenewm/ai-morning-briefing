@@ -1,0 +1,179 @@
+✅ API Key loaded from .env: 54ec9890-5...
+
+================================================================================
+Testing Exa Research API
+================================================================================
+Query: Find recent conversational AI and major AI product updates from the last 7 days relevant to AI Product Managers. The final report should have at least...
+
+Creating research job with model 'exa-research-pro'...
+(This may take 60-120 seconds for PRO model)
+
+✅ Research job created!
+Research ID: r_01k93d89006bm1jd5yqk5wkmpf
+
+⏳ Polling until finished...
+
+================================================================================
+✅ Research Completed!
+================================================================================
+
+Result type: <class 'exa_py.research.models.ResearchCompletedDto'>
+Result attributes: ['construct', 'copy', 'cost_dollars', 'created_at', 'dict', 'events', 'finished_at', 'from_orm', 'instructions', 'json', 'model', 'model_computed_fields', 'model_config', 'model_construct', 'model_copy', 'model_dump', 'model_dump_json', 'model_extra', 'model_fields', 'model_fields_set', 'model_json_schema', 'model_parametrized_name', 'model_post_init', 'model_rebuild', 'model_validate', 'model_validate_json', 'model_validate_strings', 'output', 'output_schema', 'parse_file', 'parse_obj', 'parse_raw', 'research_id', 'schema', 'schema_json', 'status', 'update_forward_refs', 'validate']
+
+✅ Research output received!
+💰 Cost: $14.1499 (Pages: 1386.70125, Searches: 51.0)
+
+================================================================================
+Research Output
+================================================================================
+
+# Conversational AI and AI Product Updates for AI Product Managers (Last 7 Days)
+
+## Voice-to-Voice Models
+
+No recent official announcements were found for voice-to-voice models from OpenAI, Google, or Deepgram within the specified date range. However, the Realtime API from OpenAI has been updated. 
+
+## Conversational AI Platforms
+
+No recent product update posts or GitHub release notes were found for LangGraph, LangChain, Vapi, Retell, or ElevenLabs between 2025-10-26 and 2025-11-02. 
+
+## Voice Infrastructure
+
+No official blog posts or GitHub release notes from Krisp, LiveKit, or Vocode published between 2025-10-26 and 2025-11-02 were found that cover voice infrastructure or turn-taking enhancements.
+
+## Multimodal RAG Systems and Vector Databases
+
+*   **Milvus:** Building Enterprise-Ready Multimodal RAG with Milvus ([https://lfaidata.foundation/communityblog/2025/10/30/building-enterprise-ready-multimodal-rag-with-milvus](https://lfaidata.foundation/communityblog/2025/10/30/building-enterprise-ready-multimodal-rag-with-milvus)) - This blog post discusses how to build a multimodal RAG system using Milvus as the vector database.
+*   **Pinecone:** Getting started with Pinecone (December 2025) ([https://www.pinecone.io/community/events/getting-started-2025-12](https://www.pinecone.io/community/events/getting-started-2025-12)) - This webinar will cover what Pinecone is, its use cases (hybrid & semantic search, recommenders, RAG), and why it's a leading vector database.
+*   **Weaviate:** Multimodal RAG - Weaviate Knowledge Cards ([https://weaviate.io/learn/knowledgecards/multimodal-rag](https://weaviate.io/learn/knowledgecards/multimodal-rag)) - This page explains Multimodal RAG, which involves retrieving from a multimodal knowledge base and then generation using a large multimodal model.
+
+## Voice Agent Testing and Evaluation
+
+No information was found on voice agent testing and evaluation.
+
+## Foundation Model Releases
+
+*   **OpenAI:** GPT-5 ([https://x.com/OpenAI/status/1953526577297600557](https://x.com/OpenAI/status/1953526577297600557)) - This model represents the most advanced AI capabilities from OpenAI.
+*   **Anthropic:** Claude 3.5 ([https://x.com/AnthropicAI/status/1852003248208552331](https://x.com/AnthropicAI/status/1852003248208552331)) - The Claude application is now available for download on Mac and Windows.
+*   **Google:** Gemini Enterprise ([https://x.com/googlecloud/status/1980375853814149347](https://x.com/googlecloud/status/1980375853814149347)) - This platform integrates Google AI capabilities into organizational workflows.
+*   **Mistral:** Mistral AI Studio ([https://x.com/MistralAI/status/1981752578951233989](https://x.com/MistralAI/status/1981752578951233989)) - The platform facilitates the transition of AI projects from experimentation to production.
+
+## AI Agent Frameworks and Autonomous Systems
+
+*   **LangChain:** Released updated versions of LangChain and LangGraph agent frameworks in Python and Typescript, improving agent orchestration and development tools. ([https://x.com/LangChainAI/status/1981030195873333269](https://x.com/LangChainAI/status/1981030195873333269))
+*   **LangGraph:** Released LangChain and LangGraph v1.0 with durable LangGraph runtime for agent creation and persistent graph structure. ([https://x.com/AllThingsAILife/status/1981063543760847149](https://x.com/AllThingsAILife/status/1981063543760847149))
+
+## Model Pricing, API Updates, and Capability Improvements
+
+*   **OpenAI:** OpenAI Realtime API has graduated from beta, enabling developers to build production-ready voice agents, and launched "gpt-realtime" to power these applications. ([https://x.com/OpenAI/status/1961125309606195516](https://x.com/OpenAI/status/1961125309606195516))
+
+## Open Source AI Alternatives and Community Tools
+
+*   **ElevenLabs:** Released open-source UI components for voice, chat, transcription, and music applications. ([https://x.com/elevenlabsio/status/1975622003550802141](https://x.com/elevenlabsio/status/1975622003550802141))
+
+## RAG and Retrieval System Improvements
+
+*   **Milvus:** Milvus is showcased as an open-source vector database used to build advanced, production-ready systems for multimodal Retrieval-Augmented Generation (RAG) applications in AI creativity. ([https://x.com/LFAIDataFdn/status/1983929747387064651](https://x.com/LFAIDataFdn/status/1983929747387064651))
+*   **Pinecone:** Pinecone boasts 400 million vectors and sub-20ms latency, asserting itself as the top choice for RAG accuracy in AI applications. ([https://x.com/pinecone/status/1983534398377955762](https://x.com/pinecone/status/1983534398377955762))
+*   **Weaviate:** Weaviate demonstrates seamless integration with AWS Bedrock and SageMaker to build sophisticated AI applications like RAG and agentic AI, showcased at AWS Startup Partner Summit. ([https://x.com/weaviate_io/status/1983941972659253739](https://x.com/weaviate_io/status/1983941972659253739))
+
+## AI Product Management Tools
+
+*   **LangSmith:** Improve agent quality with Insights Agent and Multi-turn Evals, now in LangSmith ([https://blog.langchain.com/insights-agent-multiturn-evals-langsmith](https://blog.langchain.com/insights-agent-multiturn-evals-langsmith)) - LangSmith released new capabilities to enhance monitoring of agents in production.
+
+## A/B Testing and Evaluation Frameworks
+
+No recent updates were found for A/B testing and evaluation frameworks.
+
+## Cost Optimization
+
+No recent updates were found for cost optimization.
+
+## Prompt Management and Versioning Tools
+
+No recent updates were found for prompt management and versioning tools.
+
+## AI Product Analytics
+
+No recent updates were found for AI product analytics.
+
+## Enterprise & Strategic
+
+*   **Google:** Gemini Enterprise ([https://x.com/googlecloud/status/1980375853814149347](https://x.com/googlecloud/status/1980375853814149347)) - This platform integrates Google AI capabilities into organizational workflows.
+
+## Enterprise AI Deployments and Customer Wins
+
+*   **Google Cloud:** TIM Brasil used Google's Gemini AI model to improve customer service by transforming customer call data into valuable insights with advanced speech analytics. ([https://x.com/googlecloud/status/1977086801794711819](https://x.com/googlecloud/status/1977086801794711819))
+
+## AI Partnerships and Acquisitions
+
+No recent updates were found for AI partnerships and acquisitions.
+
+## Vertical-Specific AI Applications
+
+*   **Google Cloud:** Gemini is used by Imperial War Museums to transcribe vast historical audio archives, making them searchable and interactive for the public. ([https://x.com/googlecloud/status/1981708505452036472](https://x.com/googlecloud/status/1981708505452036472))
+
+## Compliance Updates
+
+No recent updates were found for compliance updates.
+
+## Build vs Buy Case Studies
+
+No recent updates were found for build vs buy case studies.
+
+## Technical Breakthroughs
+
+*   **Google Cloud:** Expanding our NVIDIA partnership: Now shipping A4X Max, Vertex AI Training, and more ([https://cloud.google.com/blog/products/compute/now-shipping-a4x-max-vertex-ai-training-and-more](https://cloud.google.com/blog/products/compute/now-shipping-a4x-max-vertex-ai-training-and-more)) - Google Cloud announced new A4X Max instances powered by NVIDIA’s GB300 NVL72, optimized for multimodal AI reasoning workloads.
+
+## Real-time Inference and Streaming Improvements
+
+*   **OpenAI:** OpenAI updated their Realtime API to include WebRTC support, simplifying real-time functionality integration with minimal code. ([https://x.com/OpenAI/status/1869119392484823480](https://x.com/OpenAI/status/1869119392484823480))
+
+## Context Window Expansions
+
+No recent updates were found for context window expansions.
+
+## Latency and Cost Reductions
+
+No recent updates were found for latency and cost reductions.
+
+## Novel Architectures with Immediate Product Applications
+
+*   **Retell:** Introduced a visual canvas system for creating flexible, reusable AI agent workflows with node-based design. ([https://x.com/jowettbrendan/status/1984600150963339367](https://x.com/jowettbrendan/status/1984600150963339367))
+
+## Benchmarks and Leaderboard Updates
+
+No recent updates were found for benchmarks and leaderboard updates.
+
+## Broader AI Breakthroughs & Emerging Trends
+
+*   **ElevenLabs:** Launched a feature for audio and video translation that preserves original speaker nuances like emotion and tone. ([https://x.com/elevenlabsio/status/1984271642558681291](https://x.com/elevenlabsio/status/1984271642558681291))
+
+## Competitive Intelligence
+
+*   **Vapi:** Integrated Speechmatics' advanced AI models, enhancing customer service agent capabilities. ([https://x.com/Vapi_AI/status/1973885833657651592](https://x.com/Vapi_AI/status/1973885833657651592))
+
+## Product Launches from Competitors in Voice AI and Conversational AI Space
+
+*   **OpenAI:** OpenAI launched gpt-realtime, a cutting-edge speech-to-speech model for developers. ([https://x.com/OpenAI/status/1961110295486808394](https://x.com/OpenAI/status/1961110295486808394))
+
+## Customer Migration Stories and Market Shifts
+
+No recent updates were found for customer migration stories and market shifts.
+
+## Startup Funding in Relevant Categories
+
+No recent updates were found for startup funding in relevant categories.
+
+
+================================================================================
+✅ Exa Research API is working perfectly!
+================================================================================
+
+Summary:
+  - Status: completed
+  - Model: exa-research-pro
+  - Content length: 9282 characters
+  - Cost: $14.1499
+  - Pages analyzed: 1386.70125
+  - Searches performed: 51.0

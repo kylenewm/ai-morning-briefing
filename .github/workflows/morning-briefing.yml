@@ -1,0 +1,111 @@
+name: Morning Briefing
+
+on:
+  # Manual trigger for testing
+  workflow_dispatch:
+    inputs:
+      run_agent_search:
+        description: 'Run AI Agent Search'
+        required: false
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+      run_newsletters:
+        description: 'Run Newsletter Processing'
+        required: false
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+      run_podcasts:
+        description: 'Run Podcast Processing'
+        required: false
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+      test_mode:
+        description: 'Use TEST_MODE (reduced API costs)'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+  
+  # Scheduled: Monday-Friday at 9:30 AM ET
+  # EST (winter): 9:30 AM = 14:30 UTC
+  # EDT (summer): 9:30 AM = 13:30 UTC
+  schedule:
+    - cron: '30 14 * * 1-5'  # 9:30 AM EST (Nov-Mar)
+    - cron: '30 13 * * 1-5'  # 9:30 AM EDT (Mar-Nov)
+
+jobs:
+  run-briefing:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Cache Python dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('podcast-summarizer/backend/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r podcast-summarizer/backend/requirements.txt
+      
+      - name: Set up Gmail credentials
+        if: ${{ github.event.inputs.run_newsletters != 'false' }}
+        run: |
+          echo "${{ secrets.GMAIL_CREDENTIALS_BASE64 }}" | base64 --decode > podcast-summarizer/gmail_credentials.json
+          echo "${{ secrets.GMAIL_TOKEN_BASE64 }}" | base64 --decode > podcast-summarizer/gmail_token.pickle
+      
+      - name: Run morning briefing
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_API_KEY: ${{ secrets.SUPABASE_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          EXA_API_KEY: ${{ secrets.EXA_API_KEY }}
+          ASSEMBLYAI_API_KEY: ${{ secrets.ASSEMBLYAI_API_KEY }}
+          LANGSMITH_API_KEY: ${{ secrets.LANGSMITH_API_KEY }}
+          LANGCHAIN_TRACING_V2: "true"
+          LANGCHAIN_PROJECT: "morning-automation"
+          SMTP_EMAIL: ${{ secrets.SMTP_EMAIL }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          EMAIL_RECIPIENT: ${{ secrets.EMAIL_RECIPIENT }}
+          # Workflow inputs for selective phase execution
+          RUN_AGENT_SEARCH: ${{ github.event.inputs.run_agent_search || 'true' }}
+          RUN_NEWSLETTERS: ${{ github.event.inputs.run_newsletters || 'true' }}
+          RUN_PODCASTS: ${{ github.event.inputs.run_podcasts || 'true' }}
+          TEST_MODE: ${{ github.event.inputs.test_mode || 'false' }}
+        run: |
+          cd podcast-summarizer
+          python -m backend.scripts.morning_briefing
+      
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: briefing-logs-${{ github.run_number }}
+          path: |
+            *.log
+            logs/
+          retention-days: 7
+

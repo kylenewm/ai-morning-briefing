@@ -1,0 +1,78 @@
+# Sensitive credentials and personal data
+.env
+gmail_credentials.json
+gmail_token.pickle
+youtube_cookies.txt
+token.json
+credentials.json
+
+# Databases (contain personal briefings and cached content)
+*.db
+*.sqlite
+morning_briefing.db
+content.db
+
+# Python cache and compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+venv/
+venv-*/
+env/
+ENV/
+.venv/
+
+# Logs (may contain personal data/timestamps)
+*.log
+server.log
+logs/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Agent cache files (pickle files with search results)
+podcast-summarizer/cache/
+*.pkl
+
+# LangGraph Studio local files
+.langgraph_api/
+
+# API keys and secrets (extra protection)
+*secret*
+*key*
+*password*
+*credential*
+
+# Temporary scripts only (keep test files)
+temp_*.py
+test_openai_key.py
+
+# Backup files
+*.bak
+*.backup
+*backup*

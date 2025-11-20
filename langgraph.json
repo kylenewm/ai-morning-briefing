@@ -1,0 +1,14 @@
+{
+  "python_version": "3.11",
+  "dependencies": [
+    "./podcast-summarizer/backend"
+  ],
+  "graphs": {
+    "conversational_ai_agent": "./podcast-summarizer/backend/services/agents/conversational_ai_agent.py:create_graph",
+    "general_ai_agent": "./podcast-summarizer/backend/services/agents/general_ai_agent.py:create_graph",
+    "research_opinion_agent": "./podcast-summarizer/backend/services/agents/research_opinion_agent.py:create_graph",
+    "orchestrator": "./podcast-summarizer/backend/services/agents/search_orchestrator.py:create_graph"
+  },
+  "env": ".env"
+}
+

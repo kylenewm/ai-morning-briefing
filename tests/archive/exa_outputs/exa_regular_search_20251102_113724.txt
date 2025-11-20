@@ -1,0 +1,73 @@
+================================================================================
+EXA REGULAR SEARCH RESULTS
+================================================================================
+
+Query: Recent AI product updates (past 24-96h) for AI PMs: voice-to-voice models, conversational AI platforms, foundation model releases, AI agents, enterprise deployments, pricing changes. Focus on announcements, case studies, benchmarks.
+Timestamp: 20251102_113724
+Results: 10
+
+
+--- Result 1 ---
+Title: GenAi Today
+URL: https://www.genaitoday.ai/listall.aspx
+Published: 2025-11-02T00:00:00.000Z
+
+
+--- Result 2 ---
+Title: Mosaic AI Announcements at Data + AI Summit 2025
+URL: https://databricks.com/blog/mosaic-ai-announcements-data-ai-summit-2025
+Published: 2025-11-06T00:00:00.000Z
+
+
+--- Result 3 ---
+Title: What's new in Azure AI Foundry Agent Service? - Azure AI Foundry
+URL: https://learn.microsoft.com/en-us/azure/ai-foundry/agents/whats-new
+Published: 2025-11-07T00:00:00.000Z
+Author: aahill
+
+
+--- Result 4 ---
+Title: Cursor 2.0 and Composer: how a multi-agent rethink surprised AI coding - CometAPI - All AI Models in One API
+URL: https://www.cometapi.com/cursor-2-0-what-changed-and-why-it-matters/
+Published: 2025-10-30T00:00:00.000Z
+Author: anna
+
+
+--- Result 5 ---
+Title: How can PMs leverage LangChain & LangGraph 1.0 for flexible orchestration and improved agent middleware in AI projects?
+URL: https://genaipm.com/ai-pm-insights/how-can-pms-leverage-langchain-langgraph-10-for-flexible-orchestration-and-impro
+Published: 2025-10-29T00:00:00.000Z
+
+
+--- Result 6 ---
+Title: Dust Product Update 18: Frames, Voice Input, Deep Dive & More
+URL: https://blog.dust.tt/dust-product-update-17-2/
+Published: 2025-10-29T00:00:00.000Z
+Author: Pauline Pham
+
+
+--- Result 7 ---
+Title: 🤖Microsoft introduces Mico, 🌐OpenAI launches Atlas browser, 🧠Claude adds project memory, 💼 ChatGPT gets company knowledge
+URL: https://www.linkedin.com/pulse/microsoft-introduces-mico-openai-launches-atlas-browser-tiigem%C3%A4e-zpt8f
+Published: 2025-10-27T00:00:00.000Z
+Author: Gerlyn Tiigemäe
+
+
+--- Result 8 ---
+Title: ChatGPT Business - Release Notes | OpenAI Help Center
+URL: https://help.openai.com/de-de/articles/11391654-chatgpt-business-release-notes
+Published: 2025-10-31T00:00:00.000Z
+
+
+--- Result 9 ---
+Title: Google Conference Call: AI commercialization fully realized, cloud business backlog orders surged by 46%, Gemini monthly active users exceeded 650 million
+URL: https://longbridge.com/en/news/263416083
+Published: 2025-10-30T00:00:00.000Z
+
+
+--- Result 10 ---
+Title: Claude Skills Tutorial: AI Update #1
+URL: https://www.news.aakashg.com/p/claude-skills-tutorial
+Published: 2025-10-30T00:00:00.000Z
+Author: Aakash Gupta
+

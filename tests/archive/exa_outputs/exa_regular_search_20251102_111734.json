@@ -1,0 +1,88 @@
+{
+  "query": "What are the latest AI product launches and features from OpenAI, Anthropic, and Google?",
+  "timestamp": "20251102_111734",
+  "mode": "regular_search",
+  "num_results": 10,
+  "results": [
+    {
+      "rank": 1,
+      "title": "Anthropic launches Claude Haiku 4.5",
+      "url": "https://mashable.com/article/anthropic-releases-new-claude-haiku-4-5-update",
+      "published_date": "2025-11-02T03:17:35.161Z",
+      "author": null,
+      "score": null
+    },
+    {
+      "rank": 2,
+      "title": "AI enters the enterprise: OpenAI integrates company data ...",
+      "url": "https://rubencolomer.substack.com/p/ai-enters-the-enterprise-openai-integrates",
+      "published_date": null,
+      "author": null,
+      "score": null
+    },
+    {
+      "rank": 3,
+      "title": "Anthropic expands Google Cloud TPUs and launches ...",
+      "url": "https://www.edtechinnovationhub.com/news/anthropic-expands-google-cloud-partnership-and-launches-claude-memory-for-enterprise",
+      "published_date": "2025-10-27T16:17:35.161Z",
+      "author": null,
+      "score": null
+    },
+    {
+      "rank": 4,
+      "title": "Claude Gets Memory\u2014And Anthropic Just Leapfrogged ...",
+      "url": "https://winsomemarketing.com/ai-in-marketing/claude-gets-memory-and-anthropic-just-leapfrogged-openai-on-transparency",
+      "published_date": "2025-10-29T16:17:35.161Z",
+      "author": null,
+      "score": null
+    },
+    {
+      "rank": 5,
+      "title": "\ud83e\udd16Microsoft introduces Mico, \ud83c\udf10OpenAI launches Atlas browser, \ud83e\udde0Claude adds project memory, \ud83d\udcbc ChatGPT gets company knowledge",
+      "url": "https://www.linkedin.com/pulse/microsoft-introduces-mico-openai-launches-atlas-browser-tiigem%C3%A4e-zpt8f",
+      "published_date": "2025-10-27T00:00:00.000Z",
+      "author": "Gerlyn Tiigem\u00e4e",
+      "score": null
+    },
+    {
+      "rank": 6,
+      "title": "AI Supremacy in 2025: Challenges, Breakthroughs ... - TTMS",
+      "url": "https://ttms.com/an-update-to-supremacy-ai-chatgpt-and-the-race-that-will-change-the-world/",
+      "published_date": "2025-10-28T16:17:35.161Z",
+      "author": null,
+      "score": null
+    },
+    {
+      "rank": 7,
+      "title": "What Google Cloud announced in AI this month",
+      "url": "https://cloud.google.com/blog/products/ai-machine-learning/what-google-cloud-announced-in-ai-this-month",
+      "published_date": "2025-10-31T16:17:35.161Z",
+      "author": null,
+      "score": null
+    },
+    {
+      "rank": 8,
+      "title": "ChatGPT: Everything you need to know about the AI chatbot",
+      "url": "https://techcrunch.com/2025/10/31/chatgpt-everything-to-know-about-the-ai-chatbot/",
+      "published_date": "2025-10-31T16:17:35.161Z",
+      "author": null,
+      "score": null
+    },
+    {
+      "rank": 9,
+      "title": "October 2025 SEO News: OpenAI\u2019s Atlas Browser, ChatGPT E-Commerce, Google\u2019s AI Mode Expansion, & More",
+      "url": "https://www.lumar.io/blog/industry-news/october-2025-seo-news-ai-atlas-browser-agentic-commerce-chatgpt-google-ai-mode-global-expansion/",
+      "published_date": "2025-10-27T00:00:00.000Z",
+      "author": "Natalie Stubbs",
+      "score": null
+    },
+    {
+      "rank": 10,
+      "title": "MiniMax-M2 Makes Debut, Beats OpenAI, Anthropic Models",
+      "url": "https://www.timesofai.com/news/minimax-m2-ai-launched/",
+      "published_date": "2025-10-27T16:17:35.161Z",
+      "author": null,
+      "score": null
+    }
+  ]
+}

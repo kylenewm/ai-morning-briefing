@@ -1,0 +1,74 @@
+================================================================================
+EXA API COMPARISON - Quality Evaluation
+================================================================================
+
+Generated: 2025-11-02 11:38:57
+Search Query: Recent AI product updates (past 24-96h) for AI PMs: voice-to-voice models, conversational AI platforms, foundation model releases, AI agents, enterprise deployments, pricing changes. Focus on announcements, case studies, benchmarks.
+Research Query: Find recent conversational AI and major AI product updates from the last 24-96 hours relevant to AI Product Managers.
+
+**Priority Voice AI Topics:**
+- Voice-to-voice models (OpenAI Realtime, Google Ge...
+
+================================================================================
+REGULAR SEARCH (mode='search')
+================================================================================
+
+Pros:
+  - Fast response (2-5 seconds)
+  - Very low cost (~$0.001 per query)
+  - Returns up to 10 URLs with metadata
+  - Good for finding specific articles
+
+Cons:
+  - No content/summaries (URLs only)
+  - Requires additional processing
+  - No synthesis or analysis
+
+Files:
+  - exa_regular_search_20251102_113724.txt
+  - exa_regular_search_20251102_113724.json
+
+================================================================================
+RESEARCH API (mode='research')
+================================================================================
+
+Pros:
+  - Comprehensive synthesized report
+  - Multiple sources analyzed and combined
+  - Well-formatted with citations
+  - Ready to use, no post-processing
+
+Cons:
+  - Slower response (30-60 seconds)
+  - Higher cost (~$0.03-0.05 per query)
+  - Single report format
+
+Files:
+  - exa_research_20251102_113724.txt
+  - exa_research_20251102_113724.json
+
+================================================================================
+RECOMMENDATION FOR DAILY BRIEFING
+================================================================================
+
+Review both outputs and consider:
+
+1. CONTENT QUALITY
+   - Is the research report accurate and relevant?
+   - Are the regular search URLs high quality?
+   - Which provides more value for your use case?
+
+2. COST vs VALUE
+   - Research: $0.03-0.05/day = ~$1-1.50/month
+   - Regular search: Nearly free
+   - Is the research quality worth the cost?
+
+3. INTEGRATION
+   - Research: Drop-in ready (single formatted report)
+   - Regular search: Requires URL processing/fetching
+
+After reviewing, you can:
+  - Add research to daily briefing (high quality, ready-to-use)
+  - Use regular search as fallback (cost-effective)
+  - Use neither (stick with Gmail + Podcasts)
+

@@ -1,0 +1,53 @@
+✅ API Key loaded from .env: 54ec9890-5...
+
+================================================================================
+Testing Exa Research API
+================================================================================
+Query: Find recent conversational AI and major AI product updates from the last 24-96 hours relevant to AI Product Managers. The final report should have at ...
+
+Creating research job with model 'exa-research-fast'...
+(This may take 30-60 seconds)
+
+✅ Research job created!
+Research ID: r_01k93cm6pfs7g6r2qzthaptbnj
+
+⏳ Polling until finished...
+
+================================================================================
+✅ Research Completed!
+================================================================================
+
+Result type: <class 'exa_py.research.models.ResearchCompletedDto'>
+Result attributes: ['construct', 'copy', 'cost_dollars', 'created_at', 'dict', 'events', 'finished_at', 'from_orm', 'instructions', 'json', 'model', 'model_computed_fields', 'model_config', 'model_construct', 'model_copy', 'model_dump', 'model_dump_json', 'model_extra', 'model_fields', 'model_fields_set', 'model_json_schema', 'model_parametrized_name', 'model_post_init', 'model_rebuild', 'model_validate', 'model_validate_json', 'model_validate_strings', 'output', 'output_schema', 'parse_file', 'parse_obj', 'parse_raw', 'research_id', 'schema', 'schema_json', 'status', 'update_forward_refs', 'validate']
+
+✅ Research output received!
+💰 Cost: $0.1402 (Pages: 20.16825, Searches: 24.0)
+
+================================================================================
+Research Output
+================================================================================
+
+# Recent Developments in Conversational AI and AI Product Management (October-November 2025)
+
+## Voice-to-Voice Models and Infrastructure
+Recent advancements include the launch of AI-driven voice agents and infrastructure enhancements. Audiocodes expanded its Voice CPaaS offering with AI agents, enabling more sophisticated voice interactions in enterprise settings ([Audiocodes](https://www.audiocodes.com/news/press-releases/news/audiocodes-expands-voice-cpaas-offering-with-ai-agents)). Deepgram introduced Flux, the world's first conversational speech recognition model, designed to improve real-time voice understanding and enable more natural interactions ([Deepgram](https://www.businesswire.com/news/home/20251002758871/en/Deepgram-Launches-Flux---The-Worlds-First-Conversational-Speech-Recognition-Model)). Helicone has developed tools for routing, debugging, and analyzing AI applications, including the Helicone AI Gateway, which enhances observability and debugging capabilities for voice systems ([Helicone](https://www.helicone.ai/changelog)).
+
+## Conversational AI Platforms
+LangSmith and LangFuse have released significant updates to their platforms. LangSmith introduced a No Code Agent Builder, allowing users to create AI agents with memory and guided prompts without coding ([LangChain Blog](https://blog.langchain.com/langsmith-agent-builder)). Both platforms have integrated OpenTelemetry for improved observability, scalability, and vendor-neutral monitoring, facilitating better management of AI agents ([LangSmith](https://langfuse.com/blog/2025-10-29-launch-week-4)).
+
+## Voice Infrastructure and Multimodal Systems
+LiveKit announced the introduction of LiveKit Inference, a new platform for deploying real-time voice AI inference at scale, emphasizing low latency and high throughput ([LiveKit](https://blog.livekit.io/introducing-livekit-inference)). Milvus and Pinecone have enhanced their vector database offerings, supporting multimodal retrieval systems that combine 
+
+... (truncated, total length: 4655 chars)
+
+================================================================================
+✅ Exa Research API is working perfectly!
+================================================================================
+
+Summary:
+  - Status: completed
+  - Model: exa-research-fast
+  - Content length: 4655 characters
+  - Cost: $0.1402
+  - Pages analyzed: 20.16825
+  - Searches performed: 24.0

@@ -1,0 +1,183 @@
+{
+  "providers": {
+    "perplexity": [
+      {
+        "title": "6 Mind-Blowing AI Products Launched in November 2025 That Will Transform Workflows",
+        "url": "https://www.youtube.com/watch?v=TEVj3HQvCPI",
+        "snippet": "This video covers major AI product launches including OpenAI Sora 2 for cinema-quality video generation, Microsoft Copilot Studio for no-code AI agent building, Anthropic's Claude Sonnet 4.5 for autonomous coding with built-in compliance, and Google's Gemini for Home smart AI assistant.",
+        "source": "YouTube",
+        "published_date": "2025-11-01",
+        "provider": "perplexity",
+        "mode": null,
+        "raw": {
+          "title": "6 Mind-Blowing AI Products Launched in November 2025 That Will Transform Workflows",
+          "summary": "This video covers major AI product launches including OpenAI Sora 2 for cinema-quality video generation, Microsoft Copilot Studio for no-code AI agent building, Anthropic's Claude Sonnet 4.5 for autonomous coding with built-in compliance, and Google's Gemini for Home smart AI assistant.",
+          "source": "YouTube",
+          "url": "https://www.youtube.com/watch?v=TEVj3HQvCPI",
+          "published_date": "2025-11-01"
+        }
+      },
+      {
+        "title": "7 Pieces of AI News We Announced in November",
+        "url": "https://blog.google/technology/ai/google-ai-updates-november-2024/",
+        "snippet": "Google made the Gemini app available on iPhone with conversational AI and image generation; launched AI-powered flood forecasting expanded to 100 countries; and introduced new AI shopping features integrating Google Lens and Maps to enhance retail experiences.",
+        "source": "Google Blog",
+        "published_date": "2025-11-01",
+        "provider": "perplexity",
+        "mode": null,
+        "raw": {
+          "title": "7 Pieces of AI News We Announced in November",
+          "summary": "Google made the Gemini app available on iPhone with conversational AI and image generation; launched AI-powered flood forecasting expanded to 100 countries; and introduced new AI shopping features integrating Google Lens and Maps to enhance retail experiences.",
+          "source": "Google Blog",
+          "url": "https://blog.google/technology/ai/google-ai-updates-november-2024/",
+          "published_date": "2025-11-01"
+        }
+      },
+      {
+        "title": "AI in Nov. 2025: Three Critical Global Decisions",
+        "url": "https://etcjournal.com/2025/10/26/ai-in-nov-2025-three-critical-global-decisions/",
+        "snippet": "Analysis of crucial infrastructure and geopolitical decisions shaping AI development scale and access in November 2025, emphasizing the strategic importance of compute resources, export controls, and power infrastructure on AI progress and global competition.",
+        "source": "ETC Journal",
+        "published_date": "2025-11-01",
+        "provider": "perplexity",
+        "mode": null,
+        "raw": {
+          "title": "AI in Nov. 2025: Three Critical Global Decisions",
+          "summary": "Analysis of crucial infrastructure and geopolitical decisions shaping AI development scale and access in November 2025, emphasizing the strategic importance of compute resources, export controls, and power infrastructure on AI progress and global competition.",
+          "source": "ETC Journal",
+          "url": "https://etcjournal.com/2025/10/26/ai-in-nov-2025-three-critical-global-decisions/",
+          "published_date": "2025-11-01"
+        }
+      },
+      {
+        "title": "This Week's Top Tech Breakthroughs and AI News Going Into November 2025",
+        "url": "https://vavoza.com/this-weeks-top-tech-breakthroughs-and-ai-news-going-into-november-2025-vz5/",
+        "snippet": "This week's tech breakthroughs highlight significant advancements in AI and product capabilities. Figma's acquisition of Weavy introduces Figma Weave, enhancing its design ecosystem with AI-driven tools for image, video, and animation creation. Grammarly's rebranding to Superhuman consolidates its offerings into a unified AI work platform, integrating writing tools, collaborative workspaces, and a proactive assistant. Perplexity Patents has launched an AI-powered conversational patent search, simplifying IP exploration. TikTok's Smart Split editing and AI Outline scripting streamline content creation for creators, while Instagram's new algorithm tuning feature enhances user control over content recommendations. Qualcomm's AI200 and AI250 chips promise 10x memory bandwidth for scalable generative AI inference. Additionally, Mistral AI Studio supports enterprises in transitioning from AI prototypes to robust systems with governance tools. These developments underscore the growing integration of AI across various sectors, emphasizing the need for product managers to adapt strategies for enhanced collaboration, content creation, and enterprise solutions.",
+        "source": "Vavoza",
+        "published_date": "2025-11-01",
+        "provider": "perplexity",
+        "mode": null,
+        "raw": {
+          "title": "This Week's Top Tech Breakthroughs and AI News Going Into November 2025",
+          "summary": "Summary of the latest breakthroughs and trends in AI and technology entering November 2025, covering innovations in AI applications, infrastructure, and emerging tools across sectors.",
+          "source": "Vavoza",
+          "url": "https://vavoza.com/this-weeks-top-tech-breakthroughs-and-ai-news-going-into-november-2025-vz5/",
+          "published_date": "2025-11-01"
+        }
+      },
+      {
+        "title": "Tim Cook Confirms Apple Eyes Major AI M&A to Accelerate AI Roadmap",
+        "url": "https://mlq.ai/news/tim-cook-confirms-apple-eyes-major-ai-ma-to-accelerate-ai-roadmap/",
+        "snippet": "Apple CEO Tim Cook provided an update on Apple's next-generation AI-powered Siri, targeting a December 2026 launch, and confirmed ongoing efforts to acquire key AI technology to accelerate its AI capabilities.",
+        "source": "MLQ",
+        "published_date": "2025-11-01",
+        "provider": "perplexity",
+        "mode": null,
+        "raw": {
+          "title": "Tim Cook Confirms Apple Eyes Major AI M&A to Accelerate AI Roadmap",
+          "summary": "Apple CEO Tim Cook provided an update on Apple's next-generation AI-powered Siri, targeting a December 2026 launch, and confirmed ongoing efforts to acquire key AI technology to accelerate its AI capabilities.",
+          "source": "MLQ",
+          "url": "https://mlq.ai/news/tim-cook-confirms-apple-eyes-major-ai-ma-to-accelerate-ai-roadmap/",
+          "published_date": "2025-11-01"
+        }
+      }
+    ]
+  },
+  "combined_ranked": [
+    {
+      "title": "This Week's Top Tech Breakthroughs and AI News Going Into November 2025",
+      "url": "https://vavoza.com/this-weeks-top-tech-breakthroughs-and-ai-news-going-into-november-2025-vz5/",
+      "snippet": "This week's tech breakthroughs highlight significant advancements in AI and product capabilities. Figma's acquisition of Weavy introduces Figma Weave, enhancing its design ecosystem with AI-driven tools for image, video, and animation creation. Grammarly's rebranding to Superhuman consolidates its offerings into a unified AI work platform, integrating writing tools, collaborative workspaces, and a proactive assistant. Perplexity Patents has launched an AI-powered conversational patent search, simplifying IP exploration. TikTok's Smart Split editing and AI Outline scripting streamline content creation for creators, while Instagram's new algorithm tuning feature enhances user control over content recommendations. Qualcomm's AI200 and AI250 chips promise 10x memory bandwidth for scalable generative AI inference. Additionally, Mistral AI Studio supports enterprises in transitioning from AI prototypes to robust systems with governance tools. These developments underscore the growing integration of AI across various sectors, emphasizing the need for product managers to adapt strategies for enhanced collaboration, content creation, and enterprise solutions.",
+      "source": "Vavoza",
+      "published_date": "2025-11-01",
+      "provider": "perplexity",
+      "mode": null,
+      "raw": {
+        "title": "This Week's Top Tech Breakthroughs and AI News Going Into November 2025",
+        "summary": "Summary of the latest breakthroughs and trends in AI and technology entering November 2025, covering innovations in AI applications, infrastructure, and emerging tools across sectors.",
+        "source": "Vavoza",
+        "url": "https://vavoza.com/this-weeks-top-tech-breakthroughs-and-ai-news-going-into-november-2025-vz5/",
+        "published_date": "2025-11-01"
+      },
+      "relevance_score": 0.85,
+      "recency_score": 0.6,
+      "combined_score": 0.775
+    },
+    {
+      "title": "6 Mind-Blowing AI Products Launched in November 2025 That Will Transform Workflows",
+      "url": "https://www.youtube.com/watch?v=TEVj3HQvCPI",
+      "snippet": "This video covers major AI product launches including OpenAI Sora 2 for cinema-quality video generation, Microsoft Copilot Studio for no-code AI agent building, Anthropic's Claude Sonnet 4.5 for autonomous coding with built-in compliance, and Google's Gemini for Home smart AI assistant.",
+      "source": "YouTube",
+      "published_date": "2025-11-01",
+      "provider": "perplexity",
+      "mode": null,
+      "raw": {
+        "title": "6 Mind-Blowing AI Products Launched in November 2025 That Will Transform Workflows",
+        "summary": "This video covers major AI product launches including OpenAI Sora 2 for cinema-quality video generation, Microsoft Copilot Studio for no-code AI agent building, Anthropic's Claude Sonnet 4.5 for autonomous coding with built-in compliance, and Google's Gemini for Home smart AI assistant.",
+        "source": "YouTube",
+        "url": "https://www.youtube.com/watch?v=TEVj3HQvCPI",
+        "published_date": "2025-11-01"
+      },
+      "relevance_score": 0.8,
+      "recency_score": 0.6,
+      "combined_score": 0.74
+    },
+    {
+      "title": "7 Pieces of AI News We Announced in November",
+      "url": "https://blog.google/technology/ai/google-ai-updates-november-2024/",
+      "snippet": "Google made the Gemini app available on iPhone with conversational AI and image generation; launched AI-powered flood forecasting expanded to 100 countries; and introduced new AI shopping features integrating Google Lens and Maps to enhance retail experiences.",
+      "source": "Google Blog",
+      "published_date": "2025-11-01",
+      "provider": "perplexity",
+      "mode": null,
+      "raw": {
+        "title": "7 Pieces of AI News We Announced in November",
+        "summary": "Google made the Gemini app available on iPhone with conversational AI and image generation; launched AI-powered flood forecasting expanded to 100 countries; and introduced new AI shopping features integrating Google Lens and Maps to enhance retail experiences.",
+        "source": "Google Blog",
+        "url": "https://blog.google/technology/ai/google-ai-updates-november-2024/",
+        "published_date": "2025-11-01"
+      },
+      "relevance_score": 0.75,
+      "recency_score": 0.6,
+      "combined_score": 0.705
+    },
+    {
+      "title": "Tim Cook Confirms Apple Eyes Major AI M&A to Accelerate AI Roadmap",
+      "url": "https://mlq.ai/news/tim-cook-confirms-apple-eyes-major-ai-ma-to-accelerate-ai-roadmap/",
+      "snippet": "Apple CEO Tim Cook provided an update on Apple's next-generation AI-powered Siri, targeting a December 2026 launch, and confirmed ongoing efforts to acquire key AI technology to accelerate its AI capabilities.",
+      "source": "MLQ",
+      "published_date": "2025-11-01",
+      "provider": "perplexity",
+      "mode": null,
+      "raw": {
+        "title": "Tim Cook Confirms Apple Eyes Major AI M&A to Accelerate AI Roadmap",
+        "summary": "Apple CEO Tim Cook provided an update on Apple's next-generation AI-powered Siri, targeting a December 2026 launch, and confirmed ongoing efforts to acquire key AI technology to accelerate its AI capabilities.",
+        "source": "MLQ",
+        "url": "https://mlq.ai/news/tim-cook-confirms-apple-eyes-major-ai-ma-to-accelerate-ai-roadmap/",
+        "published_date": "2025-11-01"
+      },
+      "relevance_score": 0.7,
+      "recency_score": 0.6,
+      "combined_score": 0.67
+    },
+    {
+      "title": "AI in Nov. 2025: Three Critical Global Decisions",
+      "url": "https://etcjournal.com/2025/10/26/ai-in-nov-2025-three-critical-global-decisions/",
+      "snippet": "Analysis of crucial infrastructure and geopolitical decisions shaping AI development scale and access in November 2025, emphasizing the strategic importance of compute resources, export controls, and power infrastructure on AI progress and global competition.",
+      "source": "ETC Journal",
+      "published_date": "2025-11-01",
+      "provider": "perplexity",
+      "mode": null,
+      "raw": {
+        "title": "AI in Nov. 2025: Three Critical Global Decisions",
+        "summary": "Analysis of crucial infrastructure and geopolitical decisions shaping AI development scale and access in November 2025, emphasizing the strategic importance of compute resources, export controls, and power infrastructure on AI progress and global competition.",
+        "source": "ETC Journal",
+        "url": "https://etcjournal.com/2025/10/26/ai-in-nov-2025-three-critical-global-decisions/",
+        "published_date": "2025-11-01"
+      },
+      "relevance_score": 0.6,
+      "recency_score": 0.6,
+      "combined_score": 0.6
+    }
+  ]
+}
