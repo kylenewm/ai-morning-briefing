@@ -554,7 +554,7 @@ MIT License - Feel free to use this for your own morning briefings!
 ## 🤝 Contact
 
 Kyle Newman - AI Product Manager  
-[GitHub](https://github.com/kylenewman) | [LinkedIn](https://linkedin.com/in/kyle-newman-ai)
+[GitHub](https://github.com/kylenewm) | [LinkedIn](https://www.linkedin.com/in/kylenewman2023/)
 
 ---
 
@@ -584,5 +584,3 @@ Kyle Newman - AI Product Manager
 - Serverless deployment with scheduled runs (Mon-Fri at 9:30 AM ET)
 - PostgreSQL database for persistent caching
 - No local server required
-
-See [FEATURES.md](FEATURES.md) for complete feature list.
