@@ -781,6 +781,7 @@ CRITICAL REQUIREMENTS:
 - Extract and present ALL key details from the source material
 - Include specific numbers, dates, names, technical details, quotes
 - Let the content dictate what's important - don't force a structure
+- Don't add filler or padding—if an article is short on substance, reflect that in your summary length
 - Include source link at the end of each story
 
 YOUR JOB:

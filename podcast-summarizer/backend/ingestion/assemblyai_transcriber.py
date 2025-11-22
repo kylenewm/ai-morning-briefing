@@ -67,8 +67,48 @@ class AssemblyAITranscriber:
             if test_mode:
                 logger.info("Test mode: Transcribing first portion of audio")
             
-            # Transcribe the audio (AssemblyAI accepts URLs directly!)
-            transcript = transcriber.transcribe(mp3_url)
+            # Check if this is a podcast host that might return 403 for direct AssemblyAI downloads
+            # (Substack confirmed, Anchor/Libsyn as preventative measure)
+            podcast_hosts_needing_headers = ['substack.com', 'anchor.fm', 'libsyn.com']
+            needs_custom_headers = any(host in mp3_url.lower() for host in podcast_hosts_needing_headers)
+            
+            if needs_custom_headers:
+                logger.info(f"Detected podcast host that may need custom headers - downloading with browser headers")
+                import httpx
+                import tempfile
+                import os
+                
+                # Download MP3 with proper User-Agent to avoid 403
+                headers = {
+                    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
+                }
+                
+                try:
+                    async with httpx.AsyncClient(timeout=120.0, follow_redirects=True) as client:
+                        response = await client.get(mp3_url, headers=headers)
+                        response.raise_for_status()
+                        
+                        # Save to temporary file
+                        with tempfile.NamedTemporaryFile(delete=False, suffix='.mp3') as tmp_file:
+                            tmp_file.write(response.content)
+                            tmp_path = tmp_file.name
+                        
+                        logger.info(f"Downloaded MP3 to temp file: {tmp_path}")
+                        
+                        # Transcribe from local file
+                        transcript = transcriber.transcribe(tmp_path)
+                        
+                        # Clean up temp file
+                        os.unlink(tmp_path)
+                except httpx.HTTPStatusError as e:
+                    logger.error(f"Failed to download MP3 from podcast host: {e.response.status_code}")
+                    return None
+                except Exception as e:
+                    logger.error(f"Error downloading/transcribing MP3 with custom headers: {e}")
+                    return None
+            else:
+                # Standard podcast CDNs (pscrb.fm, podtrac, etc.): Use direct URL (AssemblyAI handles download)
+                transcript = transcriber.transcribe(mp3_url)
             
             # Check if transcription was successful
             if transcript.status == aai.TranscriptStatus.error:
@@ -216,7 +256,13 @@ class AssemblyAITranscriber:
             - Tactical advice and workflows
             - Technical details and implementation notes
             
-            Format with subheadings. Write in active voice. Present the information directly—don't narrate that "they discussed" something.
+            FORMAT:
+            - Use markdown subheadings (###) for each major topic
+            - Write in PARAGRAPHS (not bullet points or lists)
+            - Each topic should have flowing prose that connects ideas naturally
+            - Don't add filler or padding—if a topic has limited content, keep it brief
+            - Write in active voice
+            - Present information directly—don't narrate that "they discussed" or "this article talks about" something
             
             Episode: {episode_title}
             

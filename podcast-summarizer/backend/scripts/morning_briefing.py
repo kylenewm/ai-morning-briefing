@@ -60,6 +60,8 @@ Keep:
 - Product announcements and updates
 - Technical details
 
+Important: Don't add filler or elaborate or try adding your own analysis or opinions.
+
 Input summary:
 {summary}
 
