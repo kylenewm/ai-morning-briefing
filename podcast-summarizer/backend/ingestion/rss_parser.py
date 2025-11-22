@@ -85,9 +85,14 @@ async def parse_podcast_feed(
         max_episodes = settings.MAX_EPISODES_PER_FEED
     
     try:
+        # Add browser-like headers to avoid 403 from podcast hosts (especially Substack)
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+        }
+        
         # Fetch the feed content
         async with httpx.AsyncClient(timeout=settings.REQUEST_TIMEOUT, follow_redirects=True) as client:
-            response = await client.get(feed_url)
+            response = await client.get(feed_url, headers=headers)
             response.raise_for_status()
             feed_content = response.text
         
