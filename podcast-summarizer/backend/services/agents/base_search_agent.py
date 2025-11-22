@@ -421,14 +421,35 @@ class BaseSearchAgent(ABC):
         # Add query context for relevance scoring
         query_context = f"\n**Original Search Query:**\n{query}\n" if query else ""
         
+        # Calculate date cutoffs for strict recency checking (weekend-aware)
+        current_date = datetime.now()
+        cutoff_date = current_date - timedelta(days=4)
+        current_date_str = current_date.strftime("%B %d, %Y")
+        cutoff_date_str = cutoff_date.strftime("%B %d, %Y")
+        
+        # Weekend-aware scoring: Monday allows 72h, Tue-Fri strict 48h cutoff
+        is_monday = current_date.weekday() == 0
+        strict_cutoff_hours = 72 if is_monday else 48
+        day_context = "Monday (weekend gap)" if is_monday else "Tuesday-Friday (daily flow)"
+        
         prompt = f"""Evaluate these articles for an AI PM newsletter. Score each 1-5 on:
 {query_context}
+**CRITICAL: Today's date is {current_date_str} ({day_context}). We are looking for articles from the past 4 days ONLY ({cutoff_date_str} or later).**
+
 1. **Relevance**: How relevant is this article to the search query above? Does it match what an AI PM searching for this topic would want?
    - 5 = Directly addresses the query topic, highly relevant to what was searched
    - 3 = Somewhat related to the query
    - 1 = Off-topic or tangentially related
 
-2. **Recency**: How fresh? (5=<24h, 4=24-48h, 3=48-72h, 2=72-96h, 1=>96h)
+2. **Recency**: How fresh is this article? **STRICT CUTOFF: Articles older than {strict_cutoff_hours} hours receive 0/5 automatically.**
+   {"   - 5 = Published in past 24 hours" if True else ""}
+   {"   - 4 = Published 24-48 hours ago" if True else ""}
+   {"   - 3 = Published 48-72 hours ago (acceptable on Monday due to weekend)" if is_monday else ""}
+   {"   - 0 = Published >72 hours ago - REJECT IMMEDIATELY" if is_monday else "   - 0 = Published >48 hours ago - REJECT IMMEDIATELY"}
+   
+   **Weekend-aware rule**: {"On Monday, articles from Friday (up to 72h) are acceptable due to weekend gap." if is_monday else "On Tuesday-Friday, only articles from past 48 hours are acceptable (strict daily flow)."}
+   
+   **Check the article content carefully**: If it mentions launch dates, events, or releases from before {cutoff_date_str}, score it 0 regardless of page metadata. Republished old content should be rejected.
 
 3. **Source Quality**: Is this a newsworthy launch/update?
    - 5 = Product launch, major feature release, significant API update, official announcements

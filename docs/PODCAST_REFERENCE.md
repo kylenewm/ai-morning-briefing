@@ -31,7 +31,6 @@ The podcast system processes 6 podcasts with two priority tiers, using AssemblyA
     "description": str,             # Brief description
     "priority": "primary|secondary" # Display tier
 }
-}
 ```
 
 ## Core Functions
@@ -126,6 +125,28 @@ The podcast system processes 6 podcasts with two priority tiers, using AssemblyA
 - TWiML: `'twimlai.com' in url`
 - Data Skeptic: `'dataskeptic' in url or 'libsyn.com' in url`
 - DataFramed: `'datacamp' in url.lower()`
+
+### 3. AI Daily Brief Gap Analysis (deprecated due to lack of quality content)
+(`get_ai_daily_brief_gap_analysis`)
+
+**File:** `backend/api/routes.py:170`
+
+**Purpose:** Extract unique insights from AI Daily Brief not covered by newsletters.
+
+**Flow:**
+1. Fetch latest AI Daily Brief episode from RSS
+2. Transcribe using AssemblyAI (if not cached)
+3. Compare transcript against TLDR AI stories and Perplexity news
+4. Use GPT-4 to extract ONLY unique insights not covered elsewhere
+5. Return filtered summary for "Additional Analysis" section
+
+**Parameters:**
+- `tldr_stories` (List): Today's TLDR AI articles
+- `perplexity_stories` (List): Today's Perplexity articles  
+- `yesterday_tldr_stories` (List): Optional yesterday's TLDR
+- `yesterday_perplexity_stories` (List): Optional yesterday's Perplexity
+
+**Returns:** `Optional[str]` - Unique insights text or None if no unique content
 
 ## Transcription System
 
