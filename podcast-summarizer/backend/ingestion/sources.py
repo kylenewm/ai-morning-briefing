@@ -60,7 +60,7 @@ PODCAST_SOURCES: Dict[str, Dict[str, Any]] = {
     },
     "dataframed": {
         "name": "DataFramed by DataCamp",
-        "rss_url": "https://feeds.megaphone.fm/MOBI8777994188",  # DataCamp's DataFramed podcast
+        "rss_url": "https://feeds.captivate.fm/dataframed/",  # DataCamp's DataFramed podcast
         "has_transcripts": True,
         "method": "assemblyai_transcript",  # Use AssemblyAI for transcription
         "category": "Data Science",
