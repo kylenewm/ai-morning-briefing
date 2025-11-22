@@ -478,6 +478,29 @@ For complete deployment instructions, see `docs/archive/SETUP_CONSOLIDATED.md`.
 
 For detailed troubleshooting, see `docs/archive/TESTING_CONSOLIDATED.md`.
 
+## ⚠️ Known Limitations
+
+### Exa AI Formatting
+**Issue**: Exa's API does not consistently respect paragraph formatting instructions in `summary_query`.
+
+**Impact**: Summaries may return with bullet points despite requesting "flowing paragraphs" or "NO bullet points".
+
+**Workaround**: The system includes a post-processing step (`clean_exa_summary_with_llm`) that uses GPT-4o-mini to convert bullet-formatted summaries to flowing paragraphs before including them in the email. This ensures the final briefing maintains consistent paragraph formatting.
+
+**Cost Impact**: Minimal (~$0.001 per article for summary reformatting).
+
+### Exa API 500 Errors
+**Issue**: Exa occasionally returns HTTP 500 errors depending on search parameters (query complexity, `livecrawl` setting, search type).
+
+**Impact**: Intermittent search failures requiring retry logic.
+
+**Workaround**: The search agents include automatic retry logic with exponential backoff. Failed searches are logged and don't crash the entire pipeline. Most failures resolve on retry.
+
+**Mitigation Strategy**: 
+- Use simpler query structures when possible
+- Implement fallback search strategies in agent refinement
+- Monitor LangSmith traces for patterns in failures
+
 ## 🧩 Component Testing
 
 Individual components can be tested locally:

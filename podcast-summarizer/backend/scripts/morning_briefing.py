@@ -46,26 +46,29 @@ async def clean_exa_summary_with_llm(summary: str, llm: ChatOpenAI) -> str:
     if not summary or len(summary.strip()) < 50:
         return summary
     
-    prompt = f"""You are cleaning an Exa AI search summary. Extract ONLY the actual article content summary.
+    prompt = f"""You are reformatting an Exa AI search summary..
 
-Remove:
+REMOVE:
 - Meta-commentary like "Areas Not Covered", "Focus Areas Covered"
-- Source attributions like "*Source: ecfan*"
+- Source attributions like "*Source: ecfan*", "*Source: by Paul Gillin*", "*Source: News Desk*" (anything with *Source:)
 - Analysis notes about what the article does/doesn't cover
-- Any formatting notes or section headers that are Exa's internal analysis
+- Section headers that are Exa's internal analysis
 
-Keep:
-- The actual article summary/content
-- Key points and takeaways
-- Product announcements and updates
-- Technical details
+KEEP & REFORMAT:
+- The actual article content
+- Key product updates, announcements, technical details
+- Important facts, numbers, dates, names
 
-Important: Don't add filler or elaborate or try adding your own analysis or opinions.
+CRITICAL FORMATTING:
+- If the content has bullet points, convert them into flowing paragraphs with natural transitions
+- Write 2-4 cohesive paragraphs (not bullet points or lists)
+- Use connective language: "Additionally,", "The update also includes...", "Furthermore," etc.
+- Don't add filler or elaborate—just present what's in the original in paragraph form
 
 Input summary:
 {summary}
 
-Output ONLY the cleaned article summary, nothing else:"""
+Output the reformatted summary as flowing paragraphs:"""
 
     try:
         response = await llm.ainvoke(prompt)

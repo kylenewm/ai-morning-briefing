@@ -332,7 +332,7 @@ class BaseSearchAgent(ABC):
                 limit=limit,
                 type=EXA_SEARCH_TYPE,  # "deep" search for quality
                 livecrawl=EXA_LIVECRAWL,  # Re-enabled - prefer fresh content
-                summary_query="Please give a concise summary",  # Simple query that works (Old query: Summarize this article for an AI Product Manager, focusing on product implications and actionable insights.")
+                summary_query="Summarize for AI Product Managers, focusing on product updates, technical details, and business implications.",
                 max_characters=max_chars,  # Agent-specific length (1000 for most, 1500 for research)
                 start_published_date=start_date.strftime("%Y-%m-%d"),
                 end_published_date=end_date.strftime("%Y-%m-%d"),
