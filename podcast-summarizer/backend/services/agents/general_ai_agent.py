@@ -1,12 +1,12 @@
 """
-General AI Search Agent
+AI Startups & Emerging Companies Search Agent
 
 Specialist agent for finding articles about:
-- Foundation models (GPT, Claude, Gemini, Llama, Mistral)
-- AI infrastructure and tooling
-- RAG systems and vector databases
-- Observability and prompt management
-- Model releases and API updates
+- AI startup product launches and updates
+- Funding announcements and new companies
+- Innovative tools from smaller teams
+- Open-source projects from emerging players
+- Novel AI applications and vertical solutions
 """
 import logging
 from typing import Any
@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 class GeneralAIAgent(BaseSearchAgent):
     """
-    Specialist agent for General AI articles.
+    Specialist agent for AI Startups & Emerging Companies.
     
     Target: 3 articles (or 1 in test mode).
     """

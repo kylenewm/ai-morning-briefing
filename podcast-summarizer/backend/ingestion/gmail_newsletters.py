@@ -42,14 +42,16 @@ NEWSLETTER_CONFIGS = {
         "priority": 1,
         "parser": "parse_tldr_ai"
     },
-    "morning_brew": {
-        "name": "Morning Brew",
-        "from_email": "crew@morningbrew.com",
-        "subject_contains": "Morning Brew",
-        "priority": 2,
-        "parser": "parse_morning_brew"
-    },
-    # Add more newsletters as needed
+    # Commented out: Morning Brew (general business news, not AI-focused)
+    # Could be replaced with Import AI, The Batch, or other AI-specific newsletters
+    # "morning_brew": {
+    #     "name": "Morning Brew",
+    #     "from_email": "crew@morningbrew.com",
+    #     "subject_contains": "Morning Brew",
+    #     "priority": 2,
+    #     "parser": "parse_morning_brew"
+    # },
+    # Add more newsletters as needed (Import AI, The Batch, Stratechery, etc.)
 }
 
 
@@ -421,13 +423,16 @@ If fewer than {max_stories} stories are relevant, return fewer numbers."""
         return stories[:max_stories]
 
 
-def parse_morning_brew(email_content: Dict[str, Any]) -> List[Dict[str, Any]]:
-    """
-    Parse Morning Brew newsletter format.
-    """
-    # Similar logic to TLDR but adapted for Morning Brew format
-    # TODO: Implement based on Morning Brew's actual format
-    return []
+# Commented out: Morning Brew parser (not implemented)
+# Kept for reference if adding Morning Brew or similar newsletters in the future
+# 
+# def parse_morning_brew(email_content: Dict[str, Any]) -> List[Dict[str, Any]]:
+#     """
+#     Parse Morning Brew newsletter format.
+#     """
+#     # Similar logic to TLDR but adapted for Morning Brew format
+#     # TODO: Implement based on Morning Brew's actual format
+#     return []
 
 
 async def get_newsletter_stories(

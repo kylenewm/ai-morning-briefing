@@ -264,7 +264,7 @@ async def main():
         # AI-Curated Articles Section (only if we have articles)
         categories = {
             'conversational_ai': '🗣️ Conversational AI',
-            'general_ai': '🤖 General AI',
+            'general_ai': '🚀 AI Startups & Emerging Companies',
             'research_opinion': '🔬 Research & Opinion'
         }
         

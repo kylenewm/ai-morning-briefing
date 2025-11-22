@@ -4,7 +4,7 @@ Search Query Library for AI Newsletter Agent
 Simplified, focused queries for Exa semantic search.
 Uses 3 specialized queries for targeted coverage:
 1. Conversational AI (voice, agents, real-time systems)
-2. General AI (models, infrastructure, enterprise)
+2. AI Startups & Emerging Companies (innovation from smaller players)
 3. Research/Opinion (trends, analysis, insights)
 
 Note: Original detailed queries archived in search_queries_ORIGINAL_DETAILED.py
@@ -21,15 +21,15 @@ Focus on: Product announcements, API updates, new capabilities, enterprise deplo
 Avoid: Basic tutorials, getting started guides, support guides, news aggregators (TechCrunch, VentureBeat, etc.), generic news coverage. Prefer original sources and official announcements.
 """
 
-# Query 2: General AI (Models + Infrastructure + Enterprise) - SIMPLIFIED
+# Query 2: AI Startups & Emerging Companies - FOCUSED ON INNOVATION
 GENERAL_AI_QUERY = """
-Recent foundation model and AI infrastructure updates for AI Product Managers (past 24-96 hours).
+Recent product launches and updates from AI startups and emerging companies for AI Product Managers (past 24-96 hours).
 
-Areas of interest: Large language model releases from major AI labs or open source projects, RAG systems, vector databases, observability platforms, prompt engineering tools, fine-tuning platforms, inference optimization, model serving infrastructure, LLM orchestration frameworks, evaluation and testing frameworks, and any other relevant AI infrastructure.
+Areas of interest: New AI tools and platforms from startups, product launches, funding announcements, innovative AI applications, developer tools, infrastructure startups, vertical AI solutions, open-source projects from smaller teams, emerging companies disrupting traditional AI workflows.
 
-Focus on: Model releases and other key improvements that could lead to someone wanting to leverage for their own use case or is just large enough news to be noteworthy. Technical blog posts from companies building in this space.
+Focus on: Company announcements from startups and smaller AI companies, new product launches, technical innovations, seed/Series A-C funding with product details, open-source releases from emerging teams, novel AI applications and use cases.
 
-Avoid: Generic explainers, introductory tutorials, support guides, news aggregators (TechCrunch, VentureBeat, etc.), generic news coverage. Prefer original sources and official announcements.
+Avoid: Major tech companies (OpenAI, Google, Anthropic, Microsoft, Meta), generic explainers, tutorials, support guides, news aggregators (TechCrunch, VentureBeat, etc.). Prefer company blogs, official announcements, and technical posts from startup engineering teams.
 """
 
 # Query 3: Research/Opinion (Trends, Analysis, Insights) - SIMPLIFIED

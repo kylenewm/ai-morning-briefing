@@ -650,91 +650,6 @@ async def summarize_podcast_episode(podcast_id: str, episode_index: int = 0) -> 
         raise HTTPException(status_code=500, detail=f"Failed to summarize episode: {str(e)}")
 
 
-@router.get("/podcasts")
-async def get_podcasts() -> Dict[str, Any]:
-    """Get all configured podcasts."""
-    try:
-        podcasts = get_all_podcasts()
-        return {"podcasts": podcasts, "total": len(podcasts)}
-    except Exception as e:
-        logger.error(f"Error fetching podcasts: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Failed to fetch podcasts: {str(e)}")
-
-
-@router.get("/podcasts/{podcast_id}")
-async def get_podcast(podcast_id: str) -> Dict[str, Any]:
-    """Get a specific podcast by ID."""
-    try:
-        podcast = get_podcast_by_id(podcast_id)
-        if not podcast:
-            raise HTTPException(status_code=404, detail=f"Podcast '{podcast_id}' not found")
-        
-        episodes = get_recent_episodes(podcast_id, limit=5)
-        return {
-            "podcast": podcast,
-            "recent_episodes": episodes,
-            "episode_count": len(episodes)
-        }
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"Error fetching podcast {podcast_id}: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Failed to fetch podcast: {str(e)}")
-
-
-@router.get("/episodes")
-async def get_all_episodes(limit: int = 50) -> Dict[str, Any]:
-    """Get all episodes across all podcasts."""
-    try:
-        all_episodes = []
-        podcasts = get_all_podcasts()
-        
-        for podcast in podcasts:
-            episodes = get_recent_episodes(podcast['id'], limit=limit)
-            for episode in episodes:
-                episode['podcast_name'] = podcast['name']
-                episode['podcast_id'] = podcast['id']
-            all_episodes.extend(episodes)
-        
-        # Sort by publication date (most recent first)
-        all_episodes.sort(key=lambda x: x.get('pub_date', ''), reverse=True)
-        
-        return {
-            "episodes": all_episodes[:limit],
-            "total": len(all_episodes),
-            "limit": limit
-        }
-    except Exception as e:
-        logger.error(f"Error fetching episodes: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Failed to fetch episodes: {str(e)}")
-
-
-@router.get("/episodes/{podcast_id}")
-async def get_podcast_episodes(podcast_id: str, limit: int = 10) -> Dict[str, Any]:
-    """Get episodes for a specific podcast."""
-    try:
-        podcast = get_podcast_by_id(podcast_id)
-        if not podcast:
-            raise HTTPException(status_code=404, detail=f"Podcast '{podcast_id}' not found")
-        
-        episodes = get_recent_episodes(podcast_id, limit=limit)
-        
-        return {
-            "podcast": podcast,
-            "episodes": episodes,
-            "total": len(episodes),
-            "limit": limit
-        }
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"Error fetching episodes for {podcast_id}: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Failed to fetch episodes: {str(e)}")
-
-
-# Old briefing endpoint removed - use /morning-briefing instead
-
-
 @router.get("/test-transcript")
 async def test_transcript_fetching() -> Dict[str, Any]:
     """
@@ -2343,4 +2258,101 @@ async def get_briefing_summary(
     except Exception as e:
         logger.error(f"❌ Briefing summary failed: {e}")
         return {"error": str(e)}
+
+
+# ==============================================================================
+# ARCHIVED ENDPOINTS (Commented Out)
+# ==============================================================================
+# The following endpoints were used for UI testing before scaling to production.
+# They are kept here for reference if a UI is built in the future.
+# 
+# To re-enable:
+# 1. Add missing import:
+#      from ..database.cache_service import CacheService
+# 
+# 2. Replace function calls:
+#      get_all_podcasts() → list(get_all_podcast_sources().values())
+#      get_recent_episodes(podcast_id, limit) → CacheService.get_recent_episodes(podcast_id, limit)
+# ==============================================================================
+
+# @router.get("/podcasts")
+# async def get_podcasts() -> Dict[str, Any]:
+#     """Get all configured podcasts."""
+#     try:
+#         podcasts = get_all_podcasts()
+#         return {"podcasts": podcasts, "total": len(podcasts)}
+#     except Exception as e:
+#         logger.error(f"Error fetching podcasts: {str(e)}")
+#         raise HTTPException(status_code=500, detail=f"Failed to fetch podcasts: {str(e)}")
+
+
+# @router.get("/podcasts/{podcast_id}")
+# async def get_podcast(podcast_id: str) -> Dict[str, Any]:
+#     """Get a specific podcast by ID."""
+#     try:
+#         podcast = get_podcast_by_id(podcast_id)
+#         if not podcast:
+#             raise HTTPException(status_code=404, detail=f"Podcast '{podcast_id}' not found")
+#         
+#         episodes = get_recent_episodes(podcast_id, limit=5)
+#         return {
+#             "podcast": podcast,
+#             "recent_episodes": episodes,
+#             "episode_count": len(episodes)
+#         }
+#     except HTTPException:
+#         raise
+#     except Exception as e:
+#         logger.error(f"Error fetching podcast {podcast_id}: {str(e)}")
+#         raise HTTPException(status_code=500, detail=f"Failed to fetch podcast: {str(e)}")
+
+
+# @router.get("/episodes")
+# async def get_all_episodes(limit: int = 50) -> Dict[str, Any]:
+#     """Get all episodes across all podcasts."""
+#     try:
+#         all_episodes = []
+#         podcasts = get_all_podcasts()
+#         
+#         for podcast in podcasts:
+#             episodes = get_recent_episodes(podcast['id'], limit=limit)
+#             for episode in episodes:
+#                 episode['podcast_name'] = podcast['name']
+#                 episode['podcast_id'] = podcast['id']
+#             all_episodes.extend(episodes)
+#         
+#         # Sort by publication date (most recent first)
+#         all_episodes.sort(key=lambda x: x.get('pub_date', ''), reverse=True)
+#         
+#         return {
+#             "episodes": all_episodes[:limit],
+#             "total": len(all_episodes),
+#             "limit": limit
+#         }
+#     except Exception as e:
+#         logger.error(f"Error fetching episodes: {str(e)}")
+#         raise HTTPException(status_code=500, detail=f"Failed to fetch episodes: {str(e)}")
+
+
+# @router.get("/episodes/{podcast_id}")
+# async def get_podcast_episodes(podcast_id: str, limit: int = 10) -> Dict[str, Any]:
+#     """Get episodes for a specific podcast."""
+#     try:
+#         podcast = get_podcast_by_id(podcast_id)
+#         if not podcast:
+#             raise HTTPException(status_code=404, detail=f"Podcast '{podcast_id}' not found")
+#         
+#         episodes = get_recent_episodes(podcast_id, limit=limit)
+#         
+#         return {
+#             "podcast": podcast,
+#             "episodes": episodes,
+#             "total": len(episodes),
+#             "limit": limit
+#         }
+#     except HTTPException:
+#         raise
+#     except Exception as e:
+#         logger.error(f"Error fetching episodes for {podcast_id}: {str(e)}")
+#         raise HTTPException(status_code=500, detail=f"Failed to fetch episodes: {str(e)}")
 
