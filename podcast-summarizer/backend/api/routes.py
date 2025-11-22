@@ -167,126 +167,6 @@ async def get_cached_podcast_summaries(limit: int = 9) -> List[Dict[str, Any]]:
         logger.error(f"Error getting cached summaries: {e}")
         return []
 
-async def get_ai_daily_brief_gap_analysis(
-    tldr_stories: List[Dict[str, Any]], 
-    perplexity_stories: List[Dict[str, Any]],
-    yesterday_tldr_stories: List[Dict[str, Any]] = None,
-    yesterday_perplexity_stories: List[Dict[str, Any]] = None
-) -> Optional[str]:
-    """
-    Get The AI Daily Brief and analyze what unique content it provides
-    that's not covered by TLDR AI or Perplexity (today + yesterday).
-    
-    Args:
-        tldr_stories: Today's TLDR AI stories
-        perplexity_stories: Today's Perplexity stories  
-        yesterday_tldr_stories: Yesterday's TLDR AI stories (optional)
-        yesterday_perplexity_stories: Yesterday's Perplexity stories (optional)
-        
-    Returns:
-        Optional[str]: Unique insights from AI Daily Brief, or None if no unique content
-    """
-    try:
-        from ..services.assemblyai_processor import process_single_episode_with_assemblyai
-        from ..ingestion.rss_parser import parse_podcast_feed
-        from ..ingestion.sources import get_podcast_by_id
-        from openai import AsyncOpenAI
-        from ..config import settings
-        
-        # Get AI Daily Brief source
-        ai_daily_brief_source = get_podcast_by_id('ai_daily_brief')
-        if not ai_daily_brief_source:
-            logger.warning("AI Daily Brief source not found")
-            return None
-            
-        # Get today's AI Daily Brief episode
-        episodes = await parse_podcast_feed(ai_daily_brief_source['rss_url'])
-        if not episodes:
-            logger.warning("No AI Daily Brief episodes found")
-            return None
-            
-        # Get the most recent episode (today)
-        latest_episode = episodes[0]
-        
-        # Transcribe the episode
-        logger.info(f"🎙️ Transcribing AI Daily Brief: {latest_episode.get('title', 'Unknown')}")
-        transcript = await process_single_episode_with_assemblyai(latest_episode, test_mode=False)
-        
-        if not transcript or not transcript.get('insights'):
-            logger.warning("AI Daily Brief transcription failed")
-            return None
-            
-        # Prepare existing content for comparison
-        existing_content = []
-        
-        # Add today's content
-        for story in tldr_stories:
-            existing_content.append(f"TLDR AI: {story.get('title', '')} - {story.get('summary', '')[:200]}")
-            
-        for story in perplexity_stories:
-            existing_content.append(f"Perplexity: {story.get('title', '')} - {story.get('summary', '')[:200]}")
-            
-        # Add yesterday's content if available
-        if yesterday_tldr_stories:
-            for story in yesterday_tldr_stories:
-                existing_content.append(f"TLDR AI (Yesterday): {story.get('title', '')} - {story.get('summary', '')[:200]}")
-                
-        if yesterday_perplexity_stories:
-            for story in yesterday_perplexity_stories:
-                existing_content.append(f"Perplexity (Yesterday): {story.get('title', '')} - {story.get('summary', '')[:200]}")
-        
-        # Use AI to compare and extract unique insights
-        openai_client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
-        
-        existing_content_text = "\n".join(existing_content)
-        
-        prompt = f"""
-        You are analyzing The AI Daily Brief podcast to find unique insights not covered by existing sources.
-        
-        EXISTING CONTENT COVERED:
-        {existing_content_text}
-        
-        AI DAILY BRIEF TRANSCRIPT:
-        {transcript['insights']}
-        
-        TASK: Extract ONLY the topics, insights, or analysis from The AI Daily Brief that are NOT already covered in the existing content above.
-        
-        If The AI Daily Brief covers topics already mentioned in TLDR AI or Perplexity (today or yesterday), DO NOT include them.
-        
-        If The AI Daily Brief provides unique business analysis, market insights, or covers different stories, extract those.
-        
-        Format as a brief summary of unique insights. If there are no unique insights, return "NO_UNIQUE_CONTENT".
-        
-        Focus on:
-        - Business implications not covered elsewhere
-        - Market analysis not mentioned in other sources  
-        - Different angles on the same stories
-        - Completely new stories not covered by TLDR/Perplexity
-        """
-        
-        response = await openai_client.chat.completions.create(
-            model="gpt-4.1-mini",  # USER PREFERENCE: Always use 4.1-mini (cheaper)
-            messages=[
-                {"role": "system", "content": "You are an expert at analyzing content overlap and identifying unique insights."},
-                {"role": "user", "content": prompt}
-            ],
-            max_tokens=500,
-            temperature=0.3
-        )
-        
-        unique_insights = response.choices[0].message.content.strip()
-        
-        if unique_insights == "NO_UNIQUE_CONTENT":
-            logger.info("AI Daily Brief has no unique content - skipping")
-            return None
-            
-        logger.info(f"✅ AI Daily Brief provided unique insights: {len(unique_insights)} chars")
-        return unique_insights
-        
-    except Exception as e:
-        logger.error(f"Error in AI Daily Brief gap analysis: {e}")
-        return None
-
 # Create API router
 router = APIRouter()
 
@@ -1477,40 +1357,6 @@ async def process_podcasts_from_cache(
                         episodes_taken += 1
                         total_episodes += 1
                         
-                    elif podcast_id == 'ai_daily_brief' and ('anchor.fm' in url or 'f7cac464' in url or ('spotify.com/pod/show/' in url and 'ai' in content_item.title.lower())):
-                        episode_data = {
-                            'title': content_item.title,
-                            'pub_date': content_item.published_date.strftime('%Y-%m-%d') if content_item.published_date else 'Unknown',
-                            'link': content_item.item_url,
-                            'podcast_name': podcast_name,
-                            'transcript_length': content_item.transcript_length or 0
-                        }
-                        
-                        cached_insights = transcriber.get_insights_from_content_item(content_item.id)
-                        
-                        if cached_insights and not force_refresh:
-                            episode_data['insights'] = cached_insights['insight_text']
-                            episode_data['practical_tips'] = cached_insights.get('practical_tips', [])
-                            episode_data['enriched_content'] = cached_insights.get('enriched_content')
-                            episode_data['source'] = 'assemblyai_cache'
-                            logger.info(f"   ✅ Using cached insights: {content_item.title[:50]}")
-                        elif content_item.transcript:
-                            logger.info(f"   🤖 Generating summary: {content_item.title[:50]}")
-                            summary = await transcriber.get_transcript_summary(
-                                content_item.transcript,
-                                content_item.title,
-                                content_item.item_url
-                            )
-                            if summary:
-                                episode_data['insights'] = summary
-                                episode_data['practical_tips'] = []
-                                episode_data['enriched_content'] = None
-                                episode_data['source'] = 'assemblyai_transcript'
-                        
-                        podcast_episodes.append(episode_data)
-                        episodes_taken += 1
-                        total_episodes += 1
-                        
                     elif podcast_id == 'data_skeptic' and 'dataskeptic' in url:
                         episode_data = {
                             'title': content_item.title,
@@ -2036,21 +1882,6 @@ async def get_morning_briefing(
                 
                 briefing_text += "---\n\n"
         
-        # Add AI Daily Brief gap analysis
-        ai_daily_brief_insights = None
-        if briefing_data['content']['newsletters'].get('detailed_stories') and briefing_data['content']['news'].get('stories'):
-            logger.info("🔍 Analyzing AI Daily Brief for unique content...")
-            ai_daily_brief_insights = await get_ai_daily_brief_gap_analysis(
-                tldr_stories=briefing_data['content']['newsletters']['detailed_stories'],
-                perplexity_stories=briefing_data['content']['news']['stories']
-            )
-            
-        if ai_daily_brief_insights:
-            briefing_text += "## Additional Analysis\n\n"
-            briefing_text += "*Unique insights from The AI Daily Brief not covered above*\n\n"
-            briefing_text += f"{ai_daily_brief_insights}\n\n"
-            briefing_text += "---\n\n"
-        
         # Add cached podcast summaries section (excluding ones already shown above)
         cached_summaries = await get_cached_podcast_summaries(limit=9)
         
@@ -2273,6 +2104,139 @@ async def get_briefing_summary(
 # 2. Replace function calls:
 #      get_all_podcasts() → list(get_all_podcast_sources().values())
 #      get_recent_episodes(podcast_id, limit) → CacheService.get_recent_episodes(podcast_id, limit)
+# ==============================================================================
+
+# ==============================================================================
+# ARCHIVED FUNCTION: AI Daily Brief Gap Analysis
+# ==============================================================================
+# Removed: The AI Daily Brief podcast lacked in-depth substance and was redundant 
+# with TLDR AI newsletter + Exa search agents providing comprehensive AI news coverage.
+# 
+# This gap analysis function was designed to extract unique insights from AI Daily Brief
+# that weren't covered by other sources, but in practice the podcast didn't provide
+# substantial unique value to justify the transcription costs and processing complexity.
+# ==============================================================================
+
+# async def get_ai_daily_brief_gap_analysis(
+#     tldr_stories: List[Dict[str, Any]], 
+#     perplexity_stories: List[Dict[str, Any]],
+#     yesterday_tldr_stories: List[Dict[str, Any]] = None,
+#     yesterday_perplexity_stories: List[Dict[str, Any]] = None
+# ) -> Optional[str]:
+#     """
+#     Get The AI Daily Brief and analyze what unique content it provides
+#     that's not covered by TLDR AI or Perplexity (today + yesterday).
+#     
+#     Args:
+#         tldr_stories: Today's TLDR AI stories
+#         perplexity_stories: Today's Perplexity stories  
+#         yesterday_tldr_stories: Yesterday's TLDR AI stories (optional)
+#         yesterday_perplexity_stories: Yesterday's Perplexity stories (optional)
+#         
+#     Returns:
+#         Optional[str]: Unique insights from AI Daily Brief, or None if no unique content
+#     """
+#     try:
+#         from ..services.assemblyai_processor import process_single_episode_with_assemblyai
+#         from ..ingestion.rss_parser import parse_podcast_feed
+#         from ..ingestion.sources import get_podcast_by_id
+#         from openai import AsyncOpenAI
+#         from ..config import settings
+#         
+#         # Get AI Daily Brief source
+#         ai_daily_brief_source = get_podcast_by_id('ai_daily_brief')
+#         if not ai_daily_brief_source:
+#             logger.warning("AI Daily Brief source not found")
+#             return None
+#             
+#         # Get today's AI Daily Brief episode
+#         episodes = await parse_podcast_feed(ai_daily_brief_source['rss_url'])
+#         if not episodes:
+#             logger.warning("No AI Daily Brief episodes found")
+#             return None
+#             
+#         # Get the most recent episode (today)
+#         latest_episode = episodes[0]
+#         
+#         # Transcribe the episode
+#         logger.info(f"🎙️ Transcribing AI Daily Brief: {latest_episode.get('title', 'Unknown')}")
+#         transcript = await process_single_episode_with_assemblyai(latest_episode, test_mode=False)
+#         
+#         if not transcript or not transcript.get('insights'):
+#             logger.warning("AI Daily Brief transcription failed")
+#             return None
+#             
+#         # Prepare existing content for comparison
+#         existing_content = []
+#         
+#         # Add today's content
+#         for story in tldr_stories:
+#             existing_content.append(f"TLDR AI: {story.get('title', '')} - {story.get('summary', '')[:200]}")
+#             
+#         for story in perplexity_stories:
+#             existing_content.append(f"Perplexity: {story.get('title', '')} - {story.get('summary', '')[:200]}")
+#             
+#         # Add yesterday's content if available
+#         if yesterday_tldr_stories:
+#             for story in yesterday_tldr_stories:
+#                 existing_content.append(f"TLDR AI (Yesterday): {story.get('title', '')} - {story.get('summary', '')[:200]}")
+#                 
+#         if yesterday_perplexity_stories:
+#             for story in yesterday_perplexity_stories:
+#                 existing_content.append(f"Perplexity (Yesterday): {story.get('title', '')} - {story.get('summary', '')[:200]}")
+#         
+#         # Use AI to compare and extract unique insights
+#         openai_client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
+#         
+#         existing_content_text = "\n".join(existing_content)
+#         
+#         prompt = f"""
+#         You are analyzing The AI Daily Brief podcast to find unique insights not covered by existing sources.
+#         
+#         EXISTING CONTENT COVERED:
+#         {existing_content_text}
+#         
+#         AI DAILY BRIEF TRANSCRIPT:
+#         {transcript['insights']}
+#         
+#         TASK: Extract ONLY the topics, insights, or analysis from The AI Daily Brief that are NOT already covered in the existing content above.
+#         
+#         If The AI Daily Brief covers topics already mentioned in TLDR AI or Perplexity (today or yesterday), DO NOT include them.
+#         
+#         If The AI Daily Brief provides unique business analysis, market insights, or covers different stories, extract those.
+#         
+#         Format as a brief summary of unique insights. If there are no unique insights, return "NO_UNIQUE_CONTENT".
+#         
+#         Focus on:
+#         - Business implications not covered elsewhere
+#         - Market analysis not mentioned in other sources  
+#         - Different angles on the same stories
+#         - Completely new stories not covered by TLDR/Perplexity
+#         """
+#         
+#         response = await openai_client.chat.completions.create(
+#             model="gpt-4.1-mini",  # USER PREFERENCE: Always use 4.1-mini (cheaper)
+#             messages=[
+#                 {"role": "system", "content": "You are an expert at analyzing content overlap and identifying unique insights."},
+#                 {"role": "user", "content": prompt}
+#             ],
+#             max_tokens=500,
+#             temperature=0.3
+#         )
+#         
+#         unique_insights = response.choices[0].message.content.strip()
+#         
+#         if unique_insights == "NO_UNIQUE_CONTENT":
+#             logger.info("AI Daily Brief has no unique content - skipping")
+#             return None
+#             
+#         logger.info(f"✅ AI Daily Brief provided unique insights: {len(unique_insights)} chars")
+#         return unique_insights
+#         
+#     except Exception as e:
+#         logger.error(f"Error in AI Daily Brief gap analysis: {e}")
+#         return None
+
 # ==============================================================================
 
 # @router.get("/podcasts")

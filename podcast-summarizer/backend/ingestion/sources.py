@@ -48,16 +48,7 @@ PODCAST_SOURCES: Dict[str, Dict[str, Any]] = {
         "description": "This Week in Machine Learning & AI",
         "priority": "primary",  # Show detailed summaries in briefing
     },
-    "ai_daily_brief": {
-        "name": "The AI Daily Brief",
-        "rss_url": "https://anchor.fm/s/f7cac464/podcast/rss",  # Nathaniel Whittemore's AI Daily Brief
-        "has_transcripts": True,
-        "method": "assemblyai_transcript",  # Use AssemblyAI for transcription
-        "category": "AI News",
-        "description": "Daily AI news and analysis with business insights",
-        "is_gap_filler": True,  # Special flag for gap-filling logic
-        "priority": "secondary",  # Show only brief links in briefing
-    },
+    # Removed: "ai_daily_brief" - The AI Daily Brief (lacks in-depth substance, redundant with TLDR AI + Exa search)
     "data_skeptic": {
         "name": "Data Skeptic",
         "rss_url": "https://dataskeptic.libsyn.com/rss",  # Kyle Polich's Data Skeptic

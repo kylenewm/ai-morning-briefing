@@ -16,11 +16,10 @@ This system automatically:
 - General AI developments (3/day)
 - Research papers & opinion pieces (2/day)
 
-**Podcasts (6 total, AssemblyAI transcription):**
+**Podcasts (5 total, AssemblyAI transcription):**
 - Lenny's Podcast
 - MLOps.community Podcast
 - TWiML AI Podcast
-- The AI Daily Brief
 - Data Skeptic
 - DataFramed by DataCamp
 
@@ -158,7 +157,6 @@ Articles scoring 4+ are accepted. Threshold may adjust based on iteration.
 - TWiML AI Podcast - This Week in Machine Learning & AI
 
 *Secondary (brief links):*
-- The AI Daily Brief - Daily AI news and analysis
 - Data Skeptic - Data science and statistics
 - DataFramed by DataCamp - Data science trends and tools
 

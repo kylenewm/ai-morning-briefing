@@ -18,7 +18,6 @@ The podcast system processes 6 podcasts with two priority tiers, using AssemblyA
 - **TWiML AI** - Machine learning and AI news
 
 ### Secondary Podcasts (Links Only)
-- **The AI Daily Brief** - Daily AI news (special gap-filling logic)
 - **Data Skeptic** - Data science and statistics
 - **DataFramed by DataCamp** - Data science trends
 
@@ -30,8 +29,8 @@ The podcast system processes 6 podcasts with two priority tiers, using AssemblyA
     "method": "assemblyai_transcript",
     "category": str,                # Classification category
     "description": str,             # Brief description
-    "priority": "primary|secondary", # Display tier
-    "is_gap_filler": bool           # Special flag for AI Daily Brief
+    "priority": "primary|secondary" # Display tier
+}
 }
 ```
 
@@ -125,30 +124,8 @@ The podcast system processes 6 podcasts with two priority tiers, using AssemblyA
 - Lenny's: `'lennysnewsletter.com' in url`
 - MLOps: `'spotify.com/pod/show/mlops' in url`
 - TWiML: `'twimlai.com' in url`
-- AI Daily Brief: `'anchor.fm' in url and 'f7cac464' in url`
 - Data Skeptic: `'dataskeptic' in url or 'libsyn.com' in url`
 - DataFramed: `'datacamp' in url.lower()`
-
-### 3. AI Daily Brief Gap Analysis (`get_ai_daily_brief_gap_analysis`)
-
-**File:** `backend/api/routes.py:170`
-
-**Purpose:** Extract unique insights from AI Daily Brief not covered by newsletters.
-
-**Flow:**
-1. Fetch latest AI Daily Brief episode from RSS
-2. Transcribe using AssemblyAI (if not cached)
-3. Compare transcript against TLDR AI stories and Perplexity news
-4. Use GPT-4 to extract ONLY unique insights not covered elsewhere
-5. Return filtered summary for "Additional Analysis" section
-
-**Parameters:**
-- `tldr_stories` (List): Today's TLDR AI articles
-- `perplexity_stories` (List): Today's Perplexity articles  
-- `yesterday_tldr_stories` (List): Optional yesterday's TLDR
-- `yesterday_perplexity_stories` (List): Optional yesterday's Perplexity
-
-**Returns:** `Optional[str]` - Unique insights text or None if no unique content
 
 ## Transcription System
 
@@ -286,8 +263,7 @@ podcast_results = await process_podcasts_from_cache(
 **Intended Implementation (Not Yet Active):**
 - Primary podcasts (3): First episode gets full detailed summary (~2000 tokens)
 - Primary podcasts (3): Subsequent episodes shown as links only
-- Secondary podcasts (3): All episodes shown as links only
-- AI Daily Brief: Special gap analysis section (shows unique insights)
+- Secondary podcasts (2): All episodes shown as links only
 
 ### Episode Display Format
 
@@ -432,17 +408,12 @@ Recommendation: Always use `episodes_per_podcast=1` for testing to minimize cost
 **Impact:** Longer emails, more GPT-4 costs than intended.  
 **Fix:** Implement priority check in `morning_briefing.py` to show only primary podcasts with full summaries.
 
-### 2. AI Daily Brief Gap Analysis Missing
-**Issue:** `get_ai_daily_brief_gap_analysis` function exists but not called in `morning_briefing.py`.  
-**Impact:** AI Daily Brief processed as regular podcast, not as gap-filler.  
-**Fix:** Add gap analysis call after newsletter processing in `morning_briefing.py`.
-
-### 3. No Episode Ordering by Priority
+### 2. No Episode Ordering by Priority
 **Issue:** Episodes displayed in order returned from cache query, not by podcast priority.  
 **Impact:** Secondary podcasts may appear before primary podcasts.  
 **Fix:** Sort episodes by podcast priority before display.
 
-### 4. URL Pattern Matching Fragility
+### 3. URL Pattern Matching Fragility
 **Issue:** Hard-coded URL patterns in `process_podcasts_from_cache` can break if RSS URLs change.  
 **Impact:** Episodes not assigned to correct podcast, missing from briefing.  
 **Fix:** Store podcast_id in ContentItem table during transcription instead of inferring from URL.
@@ -451,7 +422,6 @@ Recommendation: Always use `episodes_per_podcast=1` for testing to minimize cost
 
 ### Short-term
 - Implement priority-based filtering (primary vs secondary)
-- Add AI Daily Brief gap analysis to daily briefing
 - Improve URL pattern matching robustness
 
 ### Long-term

@@ -117,11 +117,10 @@ The Morning Automation system is an AI-powered briefing tool that curates AI art
 
 ### 4. Podcast Processing
 
-**Supported Podcasts (6 total):**
+**Supported Podcasts (5 total):**
 - Lenny's Podcast (Product Management)
 - MLOps.community Podcast (ML Operations)
 - TWiML AI Podcast (Machine Learning & AI)
-- The AI Daily Brief (AI News)
 - Data Skeptic (Data Science)
 - DataFramed by DataCamp (Data Science)
 
