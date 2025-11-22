@@ -21,6 +21,7 @@ from ..config import settings
 from ..api.routes import process_podcasts_from_cache
 from ..services.assemblyai_processor import cache_all_podcast_transcripts
 from ..ingestion.sources import get_all_podcast_sources
+from langchain_openai import ChatOpenAI
 
 # Configure logging
 logging.basicConfig(
@@ -28,6 +29,49 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
+
+
+async def clean_exa_summary_with_llm(summary: str, llm: ChatOpenAI) -> str:
+    """
+    Use LLM to extract only the actual article summary content,
+    removing all meta-commentary, analysis notes, and Exa's internal formatting.
+    
+    Args:
+        summary: Raw Exa summary text
+        llm: ChatOpenAI instance
+        
+    Returns:
+        Cleaned summary with only article content
+    """
+    if not summary or len(summary.strip()) < 50:
+        return summary
+    
+    prompt = f"""You are cleaning an Exa AI search summary. Extract ONLY the actual article content summary.
+
+Remove:
+- Meta-commentary like "Areas Not Covered", "Focus Areas Covered"
+- Source attributions like "*Source: ecfan*"
+- Analysis notes about what the article does/doesn't cover
+- Any formatting notes or section headers that are Exa's internal analysis
+
+Keep:
+- The actual article summary/content
+- Key points and takeaways
+- Product announcements and updates
+- Technical details
+
+Input summary:
+{summary}
+
+Output ONLY the cleaned article summary, nothing else:"""
+
+    try:
+        response = await llm.ainvoke(prompt)
+        cleaned = response.content.strip()
+        return cleaned if cleaned else summary  # Fallback to original if LLM fails
+    except Exception as e:
+        logger.warning(f"LLM summary cleaning failed: {e}, using original")
+        return summary
 
 
 async def main():
@@ -226,6 +270,9 @@ async def main():
         
         total_articles = sum(len(articles_result.get(cat, [])) for cat in categories.keys())
         if total_articles > 0:
+            # Initialize LLM for summary cleaning
+            llm = ChatOpenAI(model="gpt-4.1-mini", temperature=0)
+            
             briefing_text += "## AI-Curated Articles\n\n"
             briefing_text += "*🤖 Curated by AI Agent using Exa semantic search*\n\n"
             
@@ -236,9 +283,11 @@ async def main():
                     for article in category_articles:
                         briefing_text += f"#### [{article.title}]({article.url})\n\n"
                         
-                        # Add summary if available
+                        # Add summary if available (cleaned with LLM)
                         if article.summary:
-                            briefing_text += f"{article.summary}\n\n"
+                            cleaned_summary = await clean_exa_summary_with_llm(article.summary, llm)
+                            if cleaned_summary:
+                                briefing_text += f"{cleaned_summary}\n\n"
                         
                         # Add source
                         if article.source:
