@@ -38,7 +38,8 @@ NEWSLETTER_CONFIGS = {
     "tldr_ai": {
         "name": "TLDR AI",
         "from_email": "dan@tldrnewsletter.com",
-        "subject_contains": None,  # Don't filter by subject, from_email is enough
+        "subject_contains": None,  # Will filter by email body content (checks for "TLDR AI" in body)
+        "body_must_contain": "TLDR AI",  # Distinguish from TLDR Tech, Web Dev, etc.
         "priority": 1,
         "parser": "parse_tldr_ai"
     },
@@ -486,15 +487,34 @@ async def get_newsletter_stories(
             'error': f'No emails found in past {hours_ago} hours'
         }
     
-    # Get most recent email
-    most_recent = messages[0]
-    email_content = get_email_content(service, most_recent['id'])
+    # Get most recent email that matches body filter (if specified)
+    email_content = None
+    body_filter = config.get('body_must_contain')
+    
+    for message in messages:
+        content = get_email_content(service, message['id'])
+        if not content:
+            continue
+        
+        # If body filter is specified, check if email body contains the required text
+        if body_filter:
+            if body_filter in content.get('body', ''):
+                email_content = content
+                logger.info(f"✅ Found {config['name']} email matching body filter: '{body_filter}'")
+                break
+            else:
+                logger.debug(f"⏭️  Skipping email (doesn't contain '{body_filter}' in body)")
+        else:
+            email_content = content
+            break
     
     if not email_content:
+        error_msg = f'No emails found matching body filter: {body_filter}' if body_filter else 'Failed to fetch email content'
+        logger.warning(f"⚠️  {error_msg}")
         return {
             'newsletter': config['name'],
             'stories': [],
-            'error': 'Failed to fetch email content'
+            'error': error_msg
         }
     
     # Parse stories based on newsletter type
