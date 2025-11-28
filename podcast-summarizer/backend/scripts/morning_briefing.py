@@ -225,24 +225,32 @@ async def main():
         # Generate markdown briefing text (following proven format from /morning-briefing API)
         briefing_text = ""
         
-        # Newsletter Stories Section - Enriched (Top 5 with full summaries)
+        # Newsletter Stories Section - Enriched (Top 5 with bullet-point summaries)
         if enriched_newsletter_stories:
             briefing_text += "## Newsletter Stories\n\n"
             
             for story in enriched_newsletter_stories:
                 briefing_text += f"### {story['title']}\n\n"
                 
-                # Add full AI-generated summary (3-5 paragraphs)
-                summary = story.get('summary', '')
-                if summary:
-                    briefing_text += f"{summary}\n\n"
+                # TL;DR - one-sentence summary
+                tldr = story.get('tldr', '')
+                if tldr:
+                    briefing_text += f"**TL;DR:** {tldr}\n\n"
                 
-                # Add key takeaways if available
+                # Key points - main bullet points
                 key_points = story.get('key_points', [])
                 if key_points:
                     briefing_text += "**Key Points:**\n"
                     for point in key_points:
-                        briefing_text += f"- {point}\n"
+                        briefing_text += f"• {point}\n"
+                    briefing_text += "\n"
+                
+                # Context - optional background (only if present)
+                context = story.get('context', [])
+                if context:
+                    briefing_text += "**Context:**\n"
+                    for item in context:
+                        briefing_text += f"• {item}\n"
                     briefing_text += "\n"
                 
                 # Add URL

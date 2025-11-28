@@ -168,7 +168,7 @@ async def summarize_to_brief(client: AsyncOpenAI, title: str, text: str, target_
     )
     try:
         resp = await client.chat.completions.create(
-            model="gpt-4o-mini",
+            model="gpt-4.1-mini",  # USER PREFERENCE: Always use 4.1-mini
             messages=[{"role": "user", "content": prompt}],
             temperature=0.2,
         )
@@ -206,7 +206,7 @@ async def _llm_score_batch(
 
     try:
         resp = await client.chat.completions.create(
-            model="gpt-4o-mini",
+            model="gpt-4.1-mini",  # USER PREFERENCE: Always use 4.1-mini
             messages=[
                 {"role": "system", "content": system},
                 {"role": "user", "content": user},

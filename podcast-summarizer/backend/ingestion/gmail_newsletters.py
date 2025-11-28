@@ -640,53 +640,38 @@ async def enrich_stories_with_ai(
                 logger.warning(f"   ⚠️  Could not fetch article: {fetch_err}")
                 article_text = None
             
-            system_prompt = """Clean this article for an AI Product Manager briefing.
+            system_prompt = """Extract key information from this article for an AI Product Manager's morning briefing.
 
-REMOVE:
-- "Today's article discusses..."
-- "The piece mentions..."
-- "They explain..."
-- "The author states..."
-- Any conversational meta-commentary about the article
-- Filler phrases and redundant context
+Format as scannable bullet points - not paragraphs. Be specific and direct.
 
-KEEP & ORGANIZE:
-- Core concepts and how they work
-- Specific examples with context
-- Technical details and implementation notes
-- Tactical advice and workflows
-- All numbers, dates, names, metrics, quotes
-- Business implications and strategic insights
+Provide JSON with these fields:
 
-Format with subheadings. Write in active voice. Present the information directly—don't narrate that "the article discusses" something.
-
-Match the article's natural length - don't pad short articles, don't truncate long ones.
-
-Provide:
-**Summary**: Write detailed paragraphs with subheadings that cover the article content directly.
-
-Include:
-- What happened/was announced/was found (state it directly)
-- Companies, people, products mentioned
-- Specific dates and timelines
-- Technical details, methodology, architecture
-- Context, background, reasoning
-- All metrics, costs, performance data, growth figures
-- Important statements and quotes
-- Roadmaps, plans, implications
-
-# REMOVED: Key Points (redundant with summary)
-# 2. **Key Points** (3-7 items): Most important specific facts
-#    - Include numbers and names
-#    - Be concrete and specific
-
-Format as JSON:
 {
-  "summary": "..."
-}"""
+  "tldr": "One sentence: what happened and why it matters to an AI PM",
+  "key_points": [
+    "3-5 bullets covering the most important facts:",
+    "- Main announcements, findings, or updates",
+    "- Technical details (architecture, methodology, performance)",
+    "- Business implications or strategic insights",
+    "- Specific metrics, timelines, names, quotes"
+  ],
+  "context": [
+    "1-2 bullets providing background (optional, skip if not needed):",
+    "- What problem this solves or why it matters now",
+    "- Who this affects"
+  ]
+}
+
+RULES:
+- Be specific: Include numbers, dates, names, tools, metrics
+- Be direct: State facts, don't narrate ("OpenAI released X" not "The article discusses how OpenAI released X")
+- Be concise: Each bullet = 1-2 sentences max
+- Focus on actionable intelligence and concrete details
+- Skip fluff, meta-commentary, and filler
+- Context is optional - only include if it adds value"""
             
             if article_text:
-                user_content = f"Create a detailed, substantive summary of this article:\n\nTitle: {story['title']}\n\nArticle Text:\n{article_text}"
+                user_content = f"Extract key points from this article:\n\nTitle: {story['title']}\n\nArticle Text:\n{article_text}"
             else:
                 # Fallback if we couldn't fetch the article
                 user_content = f"Based on the title and brief description, provide what context you can:\n\nTitle: {story['title']}\nBrief: {story.get('brief_description', 'N/A')}"
@@ -707,8 +692,9 @@ Format as JSON:
             
             enriched_story = {
                 **story,
-                'summary': ai_analysis.get('summary', ''),
-                # 'key_points': ai_analysis.get('key_points', []),  # REMOVED: redundant with summary
+                'tldr': ai_analysis.get('tldr', ''),
+                'key_points': ai_analysis.get('key_points', []),
+                'context': ai_analysis.get('context', []),
                 'enriched': True
             }
             
@@ -716,10 +702,12 @@ Format as JSON:
             try:
                 from ..database import CacheService
                 
-                # REMOVED: Key points formatting (redundant with summary)
-                # key_points_text = "\n".join([f"• {point}" for point in enriched_story.get('key_points', [])])
-                # insight_text = f"{enriched_story['summary']}\n\nKey Points:\n{key_points_text}"
-                insight_text = enriched_story['summary']
+                # Format insight text from bullet points
+                key_points_text = "\n".join([f"• {point}" for point in enriched_story.get('key_points', [])])
+                context_text = "\n".join([f"• {item}" for item in enriched_story.get('context', [])])
+                insight_text = f"TL;DR: {enriched_story.get('tldr', '')}\n\nKey Points:\n{key_points_text}"
+                if context_text:
+                    insight_text += f"\n\nContext:\n{context_text}"
                 
                 CacheService.save_content_and_insight(
                     source_type="newsletter",
@@ -731,7 +719,7 @@ Format as JSON:
                     youtube_url=None,
                     published_date=None,  # Could parse from email date if needed
                     description=story.get('brief_description', ''),
-                    model_name="gpt-4o-mini",
+                    model_name="gpt-4.1-mini",  # USER PREFERENCE: Always use 4.1-mini
                     test_mode=False
                 )
             except Exception as cache_err:
@@ -745,7 +733,9 @@ Format as JSON:
             logger.error(f"Traceback: {traceback.format_exc()}")
             return {
                 **story,
-                'summary': story.get('brief_description', ''),
+                'tldr': story.get('brief_description', ''),
+                'key_points': [],
+                'context': [],
                 'enriched': False,
                 'error': str(e)
             }

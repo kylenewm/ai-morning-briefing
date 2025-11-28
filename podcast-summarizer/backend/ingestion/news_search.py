@@ -120,7 +120,7 @@ Focus on credible sources and significant developments."""
         # Web search is enabled by adding the web_search tool
         # Supported models: gpt-4o, gpt-4o-mini, o1-preview, o1-mini
         response = await client.chat.completions.create(
-            model="gpt-4o-mini",  # Most cost-effective model with web search
+            model="gpt-4.1-mini",  # USER PREFERENCE: Always use 4.1-mini
             messages=[
                 {"role": "user", "content": f"{system_prompt}\n\n{user_prompt}"}
             ],
@@ -273,7 +273,7 @@ Keep it concise but insightful. AI news should be 60-70% of the content."""
     
     try:
         response = await client.chat.completions.create(
-            model="gpt-4o-mini",  # Fast and cheap for briefing generation
+            model="gpt-4.1-mini",  # USER PREFERENCE: Always use 4.1-mini
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}

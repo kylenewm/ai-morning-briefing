@@ -436,7 +436,7 @@ class AssemblyAITranscriber:
                     insight_text=summary,
                     practical_tips=practical_tips,
                     enriched_content=enriched_content,
-                    model_name="gpt-4o-mini",
+                    model_name="gpt-4.1-mini",  # USER PREFERENCE: Always use 4.1-mini
                     was_test_mode=False,
                     token_count=len(summary.split()),
                     created_at=func.now()
