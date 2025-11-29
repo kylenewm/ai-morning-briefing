@@ -349,11 +349,13 @@ async def main():
         
         # Display detailed episodes (primary podcasts, first episode)
         if detailed_episodes:
-            briefing_text += "## Podcast Insights\n\n"
+            briefing_text += "## Podcasts\n\n"
             
             for item in detailed_episodes:
-                briefing_text += f"### {item['podcast_name']}\n\n"
-                briefing_text += f"**{item['episode'].get('title', 'Untitled Episode')}**\n\n"
+                # Use [TAG:PODCAST] format for proper email styling
+                episode_title = item['episode'].get('title', 'Untitled Episode')
+                episode_author = item['episode'].get('author', '')
+                briefing_text += f"### [TAG:PODCAST] {item['podcast_name']}|||{episode_title}|||{episode_author}\n\n"
                 briefing_text += f"{item['insights']}\n\n"
                 
                 if item['episode'].get('link'):
@@ -363,6 +365,8 @@ async def main():
         
         # Display link-only episodes (secondary podcasts + additional primary episodes)
         if link_only_episodes:
+            if not detailed_episodes:
+                briefing_text += "## Podcasts\n\n"
             briefing_text += "### Additional Podcast Episodes\n\n"
             
             for item in link_only_episodes:

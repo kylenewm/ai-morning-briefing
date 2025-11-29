@@ -43,9 +43,11 @@ def format_briefing_as_html(briefing_text: str, stats: dict) -> str:
         'text_secondary': '#a0a0a0',  # Muted gray
         'accent': '#00f2ff',          # Electric Turquoise / Cyan
         'accent_podcast': '#8b5cf6',  # Violet/Purple for Podcasts
+        'accent_ai': '#f59e0b',       # Orange for AI Articles
         'border': '#30363d',          # Standard border
         'border_active': 'rgba(0, 242, 255, 0.3)', # Turquoise glow border
         'border_podcast': 'rgba(139, 92, 246, 0.3)', # Violet glow border
+        'border_ai': 'rgba(245, 158, 11, 0.3)',     # Orange glow border
         'header': '#ffffff',          # Pure white
         'code_bg': '#111111',
         'success': '#00ff9d',
@@ -69,6 +71,7 @@ def format_briefing_as_html(briefing_text: str, stats: dict) -> str:
     
     in_story_card = False
     in_podcast_section = False # Track if we are processing podcast items
+    in_ai_section = False      # Track if we are processing AI articles
 
     for line in lines:
         line = line.strip()
@@ -87,10 +90,21 @@ def format_briefing_as_html(briefing_text: str, stats: dict) -> str:
             continue
         
         # Determine current accent colors based on section
-        current_accent = COLORS['accent_podcast'] if in_podcast_section else COLORS['accent']
-        current_border = COLORS['border_podcast'] if in_podcast_section else COLORS['border_active']
-        current_bg_btn = f"rgba(139, 92, 246, 0.1)" if in_podcast_section else f"rgba(0, 242, 255, 0.1)"
-        current_shadow = f"rgba(139, 92, 246, 0.1)" if in_podcast_section else f"rgba(0, 242, 255, 0.1)"
+        if in_podcast_section:
+            current_accent = COLORS['accent_podcast']
+            current_border = COLORS['border_podcast']
+            current_bg_btn = "rgba(139, 92, 246, 0.1)"
+            current_shadow = "rgba(139, 92, 246, 0.1)"
+        elif in_ai_section:
+            current_accent = COLORS['accent_ai']
+            current_border = COLORS['border_ai']
+            current_bg_btn = "rgba(245, 158, 11, 0.1)"
+            current_shadow = "rgba(245, 158, 11, 0.1)"
+        else:
+            current_accent = COLORS['accent']
+            current_border = COLORS['border_active']
+            current_bg_btn = "rgba(0, 242, 255, 0.1)"
+            current_shadow = "rgba(0, 242, 255, 0.1)"
 
         # Check for Button Link (Action button)
         # Matches lines like "[Read Full Story →](url)" or "[Listen to Episode →](url)"
@@ -170,10 +184,11 @@ def format_briefing_as_html(briefing_text: str, stats: dict) -> str:
                 <div style="
                     background-color: {COLORS["bg_subcard"]};
                     border: 1px solid {current_border};
+                    border-top: 2px solid {current_border};
                     border-radius: 8px;
                     padding: 24px;
                     margin-bottom: 24px;
-                    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+                    box-shadow: 0 0 15px {current_shadow};
                 ">
                 {badge_html}
                 <div style="color: {COLORS["header"]}; margin-top: {margin_top}; margin-bottom: 16px; font-size: {font_size}; font-weight: 600; letter-spacing: -0.3px;">{title}</div>
@@ -187,12 +202,17 @@ def format_briefing_as_html(briefing_text: str, stats: dict) -> str:
                 html_content.append('</div></div>')
                 in_story_card = False
             
-            # Detect section change to reset podcast flag if needed (though we usually flow sequentially)
+            # Detect section change to set appropriate color scheme
             section_title = line.replace('## ', '').strip()
             if "Podcast" in section_title:
                 in_podcast_section = True
+                in_ai_section = False
+            elif "AI" in section_title and "Article" in section_title:
+                in_ai_section = True
+                in_podcast_section = False
             else:
                 in_podcast_section = False
+                in_ai_section = False
                 
             title = process_inline_formatting(section_title, current_accent, current_border)
             # Section header with distinct bottom border
@@ -375,7 +395,7 @@ def format_briefing_as_html(briefing_text: str, stats: dict) -> str:
             ">
                 <span style="color: {COLORS["accent"]}; font-weight: 600;">{stats.get('newsletter_stories', 0)}</span> Stories
                 <span style="margin: 0 16px; color: #444;">•</span>
-                <span style="color: {COLORS["accent"]}; font-weight: 600;">{stats.get('agent_articles', 0)}</span> AI Articles
+                <span style="color: {COLORS["accent_ai"]}; font-weight: 600;">{stats.get('agent_articles', 0)}</span> AI Articles
                 <span style="margin: 0 16px; color: #444;">•</span>
                 <span style="color: {COLORS["accent_podcast"]}; font-weight: 600;">{stats.get('podcast_episodes', 0)}</span> Podcasts
             </div>
