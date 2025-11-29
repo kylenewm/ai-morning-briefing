@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 def format_briefing_as_html(briefing_text: str, stats: dict) -> str:
     """
-    Format briefing text as HTML email.
+    Format briefing text as HTML email with Dark Mode / Cyberpunk aesthetic.
     
     Args:
         briefing_text: Plain text briefing
@@ -29,10 +29,47 @@ def format_briefing_as_html(briefing_text: str, stats: dict) -> str:
     Returns:
         HTML formatted email
     """
-    # Convert plain text to HTML with proper header parsing
     lines = briefing_text.split('\n')
     html_content = []
     
+    import re
+    
+    # -- Design Tokens --
+    COLORS = {
+        'bg_page': '#050505',         # Deep black outer
+        'bg_card': '#0a0a0a',         # Dark container
+        'bg_subcard': '#161b22',      # Lighter sub-card (inverted contrast)
+        'text_primary': '#e0e0e0',    # High readability gray-white
+        'text_secondary': '#a0a0a0',  # Muted gray
+        'accent': '#00f2ff',          # Electric Turquoise / Cyan
+        'accent_podcast': '#8b5cf6',  # Violet/Purple for Podcasts
+        'border': '#30363d',          # Standard border
+        'border_active': 'rgba(0, 242, 255, 0.3)', # Turquoise glow border
+        'border_podcast': 'rgba(139, 92, 246, 0.3)', # Violet glow border
+        'header': '#ffffff',          # Pure white
+        'code_bg': '#111111',
+        'success': '#00ff9d',
+    }
+    
+    def process_markdown_links(text: str, accent_color: str, border_color: str) -> str:
+        """Convert markdown links [text](url) to styled HTML <a> tags."""
+        return re.sub(
+            r'\[([^\]]+)\]\(([^)]+)\)',
+            f'<a href="\\2" style="color: {accent_color}; text-decoration: none; border-bottom: 1px solid {border_color}; transition: all 0.2s ease;">\\1</a>',
+            text
+        )
+    
+    def process_inline_formatting(text: str, accent_color: str = COLORS['accent'], border_color: str = COLORS['border_active']) -> str:
+        """Process bold markdown and links."""
+        # Convert **text** to <strong style="color: white;">text</strong>
+        text = re.sub(r'\*\*(.+?)\*\*', f'<strong style="color: {COLORS["header"]}; font-weight: 600;">\\1</strong>', text)
+        # Convert markdown links
+        text = process_markdown_links(text, accent_color, border_color)
+        return text
+    
+    in_story_card = False
+    in_podcast_section = False # Track if we are processing podcast items
+
     for line in lines:
         line = line.strip()
         if not line:
@@ -40,40 +77,230 @@ def format_briefing_as_html(briefing_text: str, stats: dict) -> str:
         
         # Check for separator
         if line == '---':
-            # Soft gradient separator - professional and calming
-            html_content.append('<div style="height: 1px; background: linear-gradient(to right, transparent, #cbd5e0 20%, #cbd5e0 80%, transparent); margin: 32px 0;"></div>')
+            # If inside a card, close it
+            if in_story_card:
+                html_content.append('</div></div>')
+                in_story_card = False
+            else:
+                # Standalone separator if not in card
+                html_content.append(f'<div style="height: 1px; background-color: {COLORS["border"]}; margin: 40px 0;"></div>')
+            continue
+        
+        # Determine current accent colors based on section
+        current_accent = COLORS['accent_podcast'] if in_podcast_section else COLORS['accent']
+        current_border = COLORS['border_podcast'] if in_podcast_section else COLORS['border_active']
+        current_bg_btn = f"rgba(139, 92, 246, 0.1)" if in_podcast_section else f"rgba(0, 242, 255, 0.1)"
+        current_shadow = f"rgba(139, 92, 246, 0.1)" if in_podcast_section else f"rgba(0, 242, 255, 0.1)"
+
+        # Check for Button Link (Action button)
+        # Matches lines like "[Read Full Story →](url)" or "[Listen to Episode →](url)"
+        button_match = re.match(r'^\[([^\]]+)\]\(([^)]+)\)$', line)
+        if button_match:
+            text, url = button_match.groups()
+            html_content.append(f'''
+                <div style="margin-top: 24px;">
+                    <a href="{url}" style="
+                        display: inline-block;
+                        padding: 12px 24px;
+                        background-color: {current_bg_btn};
+                        border: 1px solid {current_border};
+                        color: {current_accent};
+                        text-decoration: none;
+                        border-radius: 6px;
+                        font-size: 13px;
+                        font-weight: 600;
+                        letter-spacing: 0.5px;
+                        text-transform: uppercase;
+                        box-shadow: 0 0 10px {current_shadow};
+                    ">{text}</a>
+                </div>
+            ''')
+            continue
+
+        # Check for headers
+        # H3 and H4 starts a new "Story Card"
+        if line.startswith('### ') or line.startswith('#### '):
+            # Close previous card if open
+            if in_story_card:
+                html_content.append('</div></div>')
+                in_story_card = False
+            
+            # Start new card
+            in_story_card = True
+            
+            level = 3 if line.startswith('### ') else 4
+            prefix = '### ' if level == 3 else '#### '
+            raw_title = line.replace(prefix, '').strip()
+            
+            # Check for Podcast Tag
+            is_podcast_item = False
+            if '[TAG:PODCAST]' in raw_title:
+                is_podcast_item = True
+                raw_title = raw_title.replace('[TAG:PODCAST]', '').strip()
+                # Ensure we are in podcast mode for colors
+                in_podcast_section = True
+                # Update colors for this card
+                current_accent = COLORS['accent_podcast']
+                current_border = COLORS['border_podcast']
+            
+            title = process_inline_formatting(raw_title, current_accent, current_border)
+            
+            font_size = "20px" if level == 3 else "18px"
+            margin_top = "0" # No margin top because it's start of card
+            
+            # Add Badge if it's a podcast item
+            badge_html = ""
+            if is_podcast_item:
+                badge_html = f'''
+                    <div style="
+                        display: inline-block;
+                        background-color: {COLORS["accent_podcast"]};
+                        color: white;
+                        font-size: 10px;
+                        font-weight: 700;
+                        padding: 4px 8px;
+                        border-radius: 4px;
+                        text-transform: uppercase;
+                        margin-bottom: 12px;
+                        letter-spacing: 0.5px;
+                    ">PODCAST</div>
+                '''
+            
+            html_content.append(f'''
+                <div style="
+                    background-color: {COLORS["bg_subcard"]};
+                    border: 1px solid {current_border};
+                    border-radius: 8px;
+                    padding: 24px;
+                    margin-bottom: 24px;
+                    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+                ">
+                {badge_html}
+                <div style="color: {COLORS["header"]}; margin-top: {margin_top}; margin-bottom: 16px; font-size: {font_size}; font-weight: 600; letter-spacing: -0.3px;">{title}</div>
+                <div style="font-size: 15px; line-height: 1.6;">
+            ''')
+            continue
+
+        # Section Headers (H1, H2) - Not inside cards
+        if line.startswith('## '):
+            if in_story_card:
+                html_content.append('</div></div>')
+                in_story_card = False
+            
+            # Detect section change to reset podcast flag if needed (though we usually flow sequentially)
+            section_title = line.replace('## ', '').strip()
+            if "Podcast" in section_title:
+                in_podcast_section = True
+            else:
+                in_podcast_section = False
+                
+            title = process_inline_formatting(section_title, current_accent, current_border)
+            # Section header with distinct bottom border
+            html_content.append(f'''
+                <h2 style="
+                    color: {COLORS["header"]};
+                    margin-top: 48px;
+                    margin-bottom: 24px;
+                    font-size: 24px;
+                    font-weight: 700;
+                    letter-spacing: -0.5px;
+                    padding-bottom: 12px;
+                    border-bottom: 2px solid {COLORS["border"]};
+                ">{title}</h2>
+            ''')
             continue
             
-        # Check for different header levels
-        if line.startswith('#### '):
-            title = line.replace('#### ', '').strip()
-            html_content.append(f'<h4 style="color: #7f8c8d; margin-top: 16px; margin-bottom: 8px; font-size: 14px; font-weight: 600;">{title}</h4>')
-        elif line.startswith('### '):
-            title = line.replace('### ', '').strip()
-            html_content.append(f'<h3 style="color: #1a73e8; margin-top: 24px; margin-bottom: 16px; font-size: 18px; font-weight: bold;">{title}</h3>')
-        elif line.startswith('## '):
-            title = line.replace('## ', '').strip()
-            html_content.append(f'<h2 style="color: #202124; margin-top: 36px; margin-bottom: 20px; font-size: 22px; font-weight: bold; padding: 12px 16px; background-color: #f8f9fa; border-left: 4px solid #1a73e8; border-radius: 4px;">{title}</h2>')
         elif line.startswith('# '):
-            title = line.replace('# ', '').strip()
-            html_content.append(f'<h1 style="color: #2c3e50; margin-top: 32px; margin-bottom: 24px; font-size: 24px; font-weight: bold;">{title}</h1>')
-        elif line.startswith('**') and line.endswith('**'):
-            # Bold text on its own line
+            if in_story_card:
+                html_content.append('</div></div>')
+                in_story_card = False
+
+            title = process_inline_formatting(line.replace('# ', '').strip(), current_accent, current_border)
+            html_content.append(f'<h1 style="color: {COLORS["header"]}; margin-top: 0; margin-bottom: 32px; font-size: 32px; font-weight: 800; letter-spacing: -1px;">{title}</h1>')
+            continue
+        
+        # Check for Metadata/Source (Blockquote style)
+        if line.startswith('> '):
+            meta_text = process_inline_formatting(line.replace('> ', '').strip(), current_accent, current_border)
+            html_content.append(f'''
+                <div style="
+                    margin: 12px 0;
+                    font-size: 12px;
+                    color: {COLORS["text_secondary"]};
+                    font-style: italic;
+                ">{meta_text}</div>
+            ''')
+            continue
+            
+        # Context Block
+        if line.startswith('**Context:**'):
+            context_text = line.replace('**Context:**', '').strip()
+            html_content.append(f'''
+                <div style="
+                    background-color: #0d1117; /* Darker inside the lighter card */
+                    border-left: 3px solid {current_accent};
+                    padding: 16px;
+                    margin: 20px 0;
+                    border-radius: 4px;
+                ">
+                    <div style="
+                        color: {current_accent};
+                        font-size: 11px;
+                        font-weight: 700;
+                        text-transform: uppercase;
+                        letter-spacing: 1px;
+                        margin-bottom: 6px;
+                    ">CONTEXT</div>
+                    <div style="
+                        color: {COLORS["text_primary"]};
+                        line-height: 1.6;
+                        font-size: 14px;
+                    ">{context_text}</div>
+                </div>
+            ''')
+            continue
+            
+        # Bold text on its own line
+        if line.startswith('**') and line.endswith('**'):
             bold_text = line.strip('*')
-            html_content.append(f'<p style="line-height: 1.6; color: #2c3e50; font-weight: bold; margin: 12px 0;">{bold_text}</p>')
-        elif line.startswith('• '):
-            # Custom styled bullet
-            bullet_text = line.replace('• ', '', 1).strip()
-            # Process inline bold markdown
-            import re
-            processed_text = re.sub(r'\*\*(.+?)\*\*', r'<strong style="color: #202124;">\1</strong>', bullet_text)
-            html_content.append(f'<div style="margin: 8px 0; padding-left: 20px; position: relative;"><span style="position: absolute; left: 0; color: #1a73e8; font-weight: bold;">•</span>{processed_text}</div>')
-        else:
-            # Regular paragraph - process inline bold markdown
-            import re
-            # Convert **text** to <strong>text</strong>
-            processed_line = re.sub(r'\*\*(.+?)\*\*', r'<strong style="color: #2c3e50;">\1</strong>', line)
-            html_content.append(f'<p style="line-height: 1.8; color: #555; margin: 8px 0;">{processed_line}</p>')
+            processed_text = process_inline_formatting(bold_text, current_accent, current_border)
+            html_content.append(f'<p style="line-height: 1.6; color: {COLORS["header"]}; font-weight: 600; margin: 20px 0 12px 0;">{processed_text}</p>')
+            continue
+            
+        # Bullets
+        if line.startswith('• ') or line.startswith('- '):
+            bullet_text = line[2:].strip()
+            processed_text = process_inline_formatting(bullet_text, current_accent, current_border)
+            html_content.append(f'''
+                <div style="
+                    margin: 12px 0;
+                    padding-left: 20px;
+                    position: relative;
+                    line-height: 1.6;
+                    color: {COLORS["text_primary"]};
+                ">
+                    <span style="
+                        position: absolute;
+                        left: 0;
+                        top: 7px;
+                        width: 5px;
+                        height: 5px;
+                        border-radius: 50%;
+                        background-color: {current_accent};
+                        box-shadow: 0 0 5px {current_accent};
+                    "></span>
+                    {processed_text}
+                </div>
+            ''')
+            continue
+            
+        # Regular paragraph
+        processed_line = process_inline_formatting(line, current_accent, current_border)
+        html_content.append(f'<p style="line-height: 1.7; color: {COLORS["text_primary"]}; margin: 12px 0; font-size: 15px;">{processed_line}</p>')
+
+    # Close any lingering card
+    if in_story_card:
+        html_content.append('</div></div>')
     
     html = f"""
     <!DOCTYPE html>
@@ -81,31 +308,110 @@ def format_briefing_as_html(briefing_text: str, stats: dict) -> str:
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="color-scheme" content="dark">
+        <style>
+            /* Dark mode resets */
+            body {{ background-color: {COLORS["bg_page"]} !important; color: {COLORS["text_primary"]} !important; }}
+            a {{ color: {COLORS["accent"]} !important; }}
+        </style>
     </head>
-    <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 20px; background-color: #f8f9fa;">
-        <div style="background-color: white; padding: 40px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); max-width: 900px; margin: 0 auto;">
-            <!-- Header with subtle accent -->
-            <div style="background: linear-gradient(135deg, #1a73e8 0%, #4285f4 100%); padding: 24px; margin: -40px -40px 32px -40px; border-radius: 8px 8px 0 0;">
-                <h1 style="color: white; margin: 0; font-size: 28px; font-weight: 600; letter-spacing: -0.5px;">Your Morning Briefing</h1>
-                <p style="color: rgba(255,255,255,0.95); margin: 8px 0 0 0; font-size: 14px;">{datetime.now().strftime('%A, %B %d, %Y')}</p>
+    <body style="
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        margin: 0;
+        padding: 40px 20px;
+        background-color: {COLORS["bg_page"]};
+        background-image: radial-gradient(circle at top center, #111111 0%, #050505 100%);
+        color: {COLORS["text_primary"]};
+        -webkit-font-smoothing: antialiased;
+    ">
+        <div style="
+            background-color: {COLORS["bg_card"]};
+            padding: 0;
+            border-radius: 12px;
+            box-shadow: 0 0 50px rgba(0, 242, 255, 0.05);
+            max-width: 750px;
+            margin: 0 auto;
+            overflow: hidden;
+            border: 1px solid #222;
+        ">
+            <!-- Hero Header -->
+            <div style="
+                background: {COLORS["bg_card"]};
+                padding: 48px 40px;
+                border-bottom: 1px solid {COLORS["border"]};
+                text-align: center;
+                position: relative;
+            ">
+                <!-- Top Glow Line -->
+                <div style="
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    height: 1px;
+                    background: linear-gradient(90deg, transparent, {COLORS["accent"]}, transparent);
+                    opacity: 0.5;
+                "></div>
+
+                <h1 style="
+                    color: {COLORS["header"]};
+                    margin: 0;
+                    font-size: 32px;
+                    font-weight: 800;
+                    letter-spacing: -0.5px;
+                    text-shadow: 0 0 20px rgba(0, 242, 255, 0.1);
+                ">Morning Briefing</h1>
+                <p style="
+                    color: {COLORS["text_secondary"]};
+                    margin: 12px 0 0 0;
+                    font-size: 14px;
+                    letter-spacing: 2px;
+                    text-transform: uppercase;
+                    font-weight: 600;
+                ">{datetime.now().strftime('%A, %B %d, %Y')}</p>
             </div>
             
-            <!-- Simple Stats Line -->
-            <div style="color: #5f6368; font-size: 14px; margin-bottom: 24px; padding: 16px; background-color: #f8f9fa; border-radius: 6px; border-left: 3px solid #1a73e8;">
-                📊 Today: {stats.get('newsletter_stories', 0)} newsletter stories{', ' + str(stats.get('agent_articles', 0)) + ' AI-curated articles' if stats.get('agent_articles', 0) > 0 else ''}, {stats.get('podcast_episodes', 0)} podcast episodes
+            <!-- Stats Bar -->
+            <div style="
+                background-color: {COLORS["bg_page"]};
+                padding: 16px 40px;
+                border-bottom: 1px solid {COLORS["border"]};
+                display: flex;
+                justify-content: center;
+                font-size: 12px;
+                color: {COLORS["text_secondary"]};
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            ">
+                <span style="margin: 0 15px;">
+                    <strong style="color: {COLORS["accent"]};">{stats.get('newsletter_stories', 0)}</strong> Stories
+                </span>
+                <span style="margin: 0 15px;">
+                    <strong style="color: {COLORS["accent"]};">{stats.get('agent_articles', 0)}</strong> AI Articles
+                </span>
+                <span style="margin: 0 15px;">
+                    <strong style="color: {COLORS["accent_podcast"]};">{stats.get('podcast_episodes', 0)}</strong> Podcasts
+                </span>
             </div>
             
-            <!-- Content -->
-            <div style="font-size: 16px;">
+            <!-- Main Content -->
+            <div style="padding: 40px;">
                 {''.join(html_content)}
             </div>
             
             <!-- Footer -->
-            <div style="margin-top: 32px; padding-top: 16px; border-top: 1px solid #ecf0f1; text-align: center; color: #95a5a6; font-size: 12px;">
-                <p>Generated by your Morning Automation Workflow</p>
-                <p style="margin-top: 8px;">
-                    <a href="http://localhost:8000/docs" style="color: #3498db; text-decoration: none;">View API Docs</a>
-                </p>
+            <div style="
+                background-color: {COLORS["bg_page"]};
+                padding: 32px;
+                border-top: 1px solid {COLORS["border"]};
+                text-align: center;
+                color: {COLORS["text_secondary"]};
+                font-size: 12px;
+            ">
+                <p style="margin: 0;">Generated by AI PM Agent</p>
+                <div style="margin-top: 16px;">
+                    <a href="http://localhost:8000/docs" style="color: {COLORS["text_secondary"]}; text-decoration: none; margin: 0 10px;">API Docs</a>
+                </div>
             </div>
         </div>
     </body>
@@ -243,4 +549,3 @@ async def send_briefing_from_db(
     except Exception as e:
         logger.error(f"❌ Failed to send briefing from DB: {e}")
         return False
-

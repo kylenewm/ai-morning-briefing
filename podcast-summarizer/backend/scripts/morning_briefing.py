@@ -114,9 +114,14 @@ async def main():
             logger.info("🤖 PHASE 1: Running AI Search Agents...")
             logger.info("=" * 80)
             
+            # For testing: allow using cache via env var. Default to False (fresh search) for production.
+            use_search_cache = os.getenv('USE_SEARCH_CACHE', 'false').lower() == 'true'
+            if use_search_cache:
+                logger.info("   ⚠️ Using CACHED search results (Testing Mode)")
+            
             articles_result = await search_all_categories(
                 max_iterations=3, 
-                use_cache=False,
+                use_cache=use_search_cache,
                 run_source="automated"  # Track as automated daily run
             )
             
@@ -184,16 +189,22 @@ async def main():
             
             try:
                 # Step 1: Cache any new episodes (only transcribes what's not cached)
-                logger.info("📥 Step 1: Checking for new episodes to transcribe...")
-                cache_result = await cache_all_podcast_transcripts(
-                    episodes_per_podcast=3,
-                    force_refresh=False  # Only transcribe new episodes
-                )
+                # For testing: allow skipping fetch via env var. Default to False (fetch new) for production.
+                skip_podcast_fetch = os.getenv('SKIP_PODCAST_FETCH', 'false').lower() == 'true'
                 
-                logger.info(f"   ✅ Cache check complete:")
-                logger.info(f"      New episodes transcribed: {cache_result['stats']['episodes_cached']}")
-                logger.info(f"      Already cached: {cache_result['stats']['episodes_skipped']}")
-                logger.info(f"      Cost estimate: ${cache_result['stats']['total_cost_estimate']:.2f}")
+                if not skip_podcast_fetch:
+                    logger.info("📥 Step 1: Checking for new episodes to transcribe...")
+                    cache_result = await cache_all_podcast_transcripts(
+                        episodes_per_podcast=3,
+                        force_refresh=False  # Only transcribe new episodes
+                    )
+                    
+                    logger.info(f"   ✅ Cache check complete:")
+                    logger.info(f"      New episodes transcribed: {cache_result['stats']['episodes_cached']}")
+                    logger.info(f"      Already cached: {cache_result['stats']['episodes_skipped']}")
+                    logger.info(f"      Cost estimate: ${cache_result['stats']['total_cost_estimate']:.2f}")
+                else:
+                    logger.info("📥 Step 1: Skipping new episode fetch (Testing Mode - using existing cache)")
                 
                 # Step 2: Get cached transcripts and generate insights
                 logger.info("\n📖 Step 2: Generating insights from cached transcripts...")
@@ -230,49 +241,45 @@ async def main():
             briefing_text += "## Newsletter Stories\n\n"
             
             for story in enriched_newsletter_stories:
+                # Title (plain text)
                 briefing_text += f"### {story['title']}\n\n"
                 
-                # TL;DR - one-sentence summary
-                tldr = story.get('tldr', '')
-                if tldr:
-                    briefing_text += f"**TL;DR:** {tldr}\n\n"
-                
-                # Key points - main bullet points
+                # Key points - main bullet points (first bullet serves as TLDR)
                 key_points = story.get('key_points', [])
                 if key_points:
-                    briefing_text += "**Key Points:**\n"
                     for point in key_points:
-                        briefing_text += f"• {point}\n"
-                    briefing_text += "\n"
+                        briefing_text += f"• {point}\n\n"
                 
-                # Context - optional background (only if present)
-                context = story.get('context', [])
+                # Context - optional background as 1-2 flowing sentences
+                context = story.get('context', '')
                 if context:
-                    briefing_text += "**Context:**\n"
-                    for item in context:
-                        briefing_text += f"• {item}\n"
-                    briefing_text += "\n"
+                    # Context is now a string, not a list
+                    if isinstance(context, list):
+                        context = ' '.join(context)  # Fallback for old format
+                    briefing_text += f"**Context:** {context}\n\n"
                 
-                # Add URL
-                briefing_text += f"[Read more]({story.get('url', '#')})\n\n"
+                # Action Link
+                briefing_text += f"[Read Full Story →]({story.get('url', '#')})\n\n"
+                
                 briefing_text += "---\n\n"
         
         # Newsletter Stories Section - Links Only (Remaining stories)
         if link_newsletter_stories:
-            briefing_text += "### Additional Newsletter Stories\n\n"
+            briefing_text += "## Additional Newsletter Stories\n\n"
             
             for story in link_newsletter_stories:
-                # Brief description with link
+                # Title (plain text)
+                briefing_text += f"### {story['title']}\n\n"
+                
+                # Brief description below (if available)
                 description = story.get('brief_description', '')
                 if description:
-                    # Truncate if too long (keep first 100 chars)
-                    if len(description) > 100:
-                        description = description[:97] + "..."
-                    briefing_text += f"• [{story['title']}]({story.get('url', '#')})\n  *{description}*\n"
-                else:
-                    briefing_text += f"• [{story['title']}]({story.get('url', '#')})\n"
-            
-            briefing_text += "\n---\n\n"
+                    briefing_text += f"{description}\n\n"
+                
+                # Action Link
+                briefing_text += f"[Read Full Story →]({story.get('url', '#')})\n\n"
+                
+                briefing_text += "---\n\n"
         
         # AI-Curated Articles Section (only if we have articles)
         categories = {
@@ -294,7 +301,7 @@ async def main():
                 if category_articles:
                     briefing_text += f"### {category_name}\n\n"
                     for article in category_articles:
-                        briefing_text += f"#### [{article.title}]({article.url})\n\n"
+                        briefing_text += f"#### {article.title}\n\n"
                         
                         # Add summary if available (cleaned with LLM)
                         if article.summary:
@@ -304,7 +311,10 @@ async def main():
                         
                         # Add source
                         if article.source:
-                            briefing_text += f"*Source: {article.source}*\n\n"
+                            briefing_text += f"> Source: {article.source}\n\n"
+                        
+                        # Action Link
+                        briefing_text += f"[Read Full Story →]({article.url})\n\n"
                         
                         briefing_text += "---\n\n"
         
@@ -355,24 +365,34 @@ async def main():
         
         # Display detailed episodes (primary podcasts, first episode)
         if detailed_episodes:
-            briefing_text += "## Podcast Insights\n\n"
+            briefing_text += "## Podcast Episodes\n\n"
             
             for item in detailed_episodes:
-                briefing_text += f"### {item['podcast_name']}\n\n"
-                briefing_text += f"**{item['episode'].get('title', 'Untitled Episode')}**\n\n"
+                # Add tag so HTML renderer knows to style this as a Podcast Card (Purple)
+                briefing_text += f"### [TAG:PODCAST] {item['podcast_name']}\n\n"
+                
+                # Episode title
+                briefing_text += f"#### {item['episode'].get('title', 'Untitled Episode')}\n\n"
+                
+                # Insights (Description)
                 briefing_text += f"{item['insights']}\n\n"
                 
                 if item['episode'].get('link'):
-                    briefing_text += f"[Listen →]({item['episode']['link']})\n\n"
+                    # Action Button
+                    briefing_text += f"[Listen to Episode →]({item['episode']['link']})\n\n"
                 
                 briefing_text += "---\n\n"
         
         # Display link-only episodes (secondary podcasts + additional primary episodes)
         if link_only_episodes:
-            briefing_text += "### Additional Podcast Episodes\n\n"
+            briefing_text += "## Additional Podcast Episodes\n\n"
             
             for item in link_only_episodes:
-                briefing_text += f"• **{item['podcast_name']}**: [{item['episode'].get('title', 'Untitled')}]({item['episode'].get('link', '#')})\n"
+                # Render as bullet point with explicit link
+                # Ensure title is present
+                title = item['episode'].get('title', 'Untitled Episode')
+                link = item['episode'].get('link', '#')
+                briefing_text += f"• **{item['podcast_name']}**: [{title}]({link})\n"
             
             briefing_text += "\n---\n\n"
         

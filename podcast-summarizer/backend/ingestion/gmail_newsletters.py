@@ -520,17 +520,14 @@ async def get_newsletter_stories(
     # Parse stories based on newsletter type
     parser_func = globals().get(config['parser'])
     if parser_func:
-        raw_stories = parser_func(email_content)
+        stories = parser_func(email_content)
     else:
         logger.error(f"❌ Parser not found: {config['parser']}")
-        raw_stories = []
+        stories = []
     
-    # Apply AI filtering for AI PM relevance (only for TLDR AI for now)
-    if newsletter_key == 'tldr_ai' and raw_stories:
-        stories = await filter_and_rank_stories_for_ai_pm(raw_stories, max_stories=max_stories)
-        logger.info(f"📊 Filtered from {len(raw_stories)} to {len(stories)} AI PM relevant stories")
-    else:
-        stories = raw_stories
+    # NOTE: AI filtering removed from here - now handled by caller (morning_briefing.py)
+    # This avoids double-filtering and gives caller more control
+    logger.info(f"📰 Extracted {len(stories)} raw stories from {config['name']}")
     
     return {
         'newsletter': config['name'],
@@ -538,7 +535,7 @@ async def get_newsletter_stories(
         'email_date': email_content['date'],
         'stories': stories,
         'total_stories': len(stories),
-        'raw_stories': len(raw_stories) if newsletter_key == 'tldr_ai' else len(stories)
+        'raw_stories': len(stories)
     }
 
 
