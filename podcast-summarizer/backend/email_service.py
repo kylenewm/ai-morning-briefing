@@ -342,32 +342,25 @@ def format_briefing_as_html(briefing_text: str, stats: dict) -> str:
                 text-align: center;
                 position: relative;
             ">
-                <!-- Top Glow Line -->
+                <!-- Top Accent Bar (short, centered) -->
                 <div style="
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    right: 0;
-                    height: 1px;
-                    background: linear-gradient(90deg, transparent, {COLORS["accent"]}, transparent);
-                    opacity: 0.5;
+                    width: 60px;
+                    height: 2px;
+                    background-color: {COLORS["accent"]};
+                    margin: 0 auto 20px;
                 "></div>
 
                 <h1 style="
                     color: {COLORS["header"]};
                     margin: 0;
-                    font-size: 32px;
-                    font-weight: 800;
-                    letter-spacing: -0.5px;
-                    text-shadow: 0 0 20px rgba(0, 242, 255, 0.1);
+                    font-size: 42px;
+                    font-weight: 600;
+                    letter-spacing: -1px;
                 ">Morning Briefing</h1>
                 <p style="
                     color: {COLORS["text_secondary"]};
-                    margin: 12px 0 0 0;
-                    font-size: 14px;
-                    letter-spacing: 2px;
-                    text-transform: uppercase;
-                    font-weight: 600;
+                    margin: 14px 0 0 0;
+                    font-size: 15px;
                 ">{datetime.now().strftime('%A, %B %d, %Y')}</p>
             </div>
             
@@ -376,26 +369,19 @@ def format_briefing_as_html(briefing_text: str, stats: dict) -> str:
                 background-color: {COLORS["bg_page"]};
                 padding: 16px 40px;
                 border-bottom: 1px solid {COLORS["border"]};
-                display: flex;
-                justify-content: center;
-                font-size: 12px;
+                text-align: center;
+                font-size: 15px;
                 color: {COLORS["text_secondary"]};
-                text-transform: uppercase;
-                letter-spacing: 1px;
             ">
-                <span style="margin: 0 15px;">
-                    <strong style="color: {COLORS["accent"]};">{stats.get('newsletter_stories', 0)}</strong> Stories
-                </span>
-                <span style="margin: 0 15px;">
-                    <strong style="color: {COLORS["accent"]};">{stats.get('agent_articles', 0)}</strong> AI Articles
-                </span>
-                <span style="margin: 0 15px;">
-                    <strong style="color: {COLORS["accent_podcast"]};">{stats.get('podcast_episodes', 0)}</strong> Podcasts
-                </span>
+                <span style="color: {COLORS["accent"]}; font-weight: 600;">{stats.get('newsletter_stories', 0)}</span> Stories
+                <span style="margin: 0 16px; color: #444;">•</span>
+                <span style="color: {COLORS["accent"]}; font-weight: 600;">{stats.get('agent_articles', 0)}</span> AI Articles
+                <span style="margin: 0 16px; color: #444;">•</span>
+                <span style="color: {COLORS["accent_podcast"]}; font-weight: 600;">{stats.get('podcast_episodes', 0)}</span> Podcasts
             </div>
             
             <!-- Main Content -->
-            <div style="padding: 40px;">
+            <div style="padding: 16px 40px 40px;">
                 {''.join(html_content)}
             </div>
             

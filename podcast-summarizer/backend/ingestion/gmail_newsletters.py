@@ -288,7 +288,22 @@ def parse_tldr_ai(email_content: Dict[str, Any]) -> List[Dict[str, Any]]:
         brief_description = ""
         if parent:
             full_text = parent.get_text(strip=True)
-            brief_description = full_text.replace(title, '').strip()[:200]
+            text = full_text.replace(title, '').strip()
+            
+            # Logic: Keep going until we finish the sentence
+            limit = 300
+            if len(text) <= limit:
+                brief_description = text
+            else:
+                # Find first sentence ending (.!?) AFTER the limit
+                match = re.search(r'[.!?]', text[limit:])
+                if match:
+                    # Cut at the end of that sentence
+                    cut_point = limit + match.start() + 1
+                    brief_description = text[:cut_point]
+                else:
+                    # Fallback: if no sentence end found even after limit, take up to 400
+                    brief_description = text[:400]
         
         # Filter for real article links
         skip_terms = ['tldr.tech', 'unsubscribe', 'sparkloop', 'advertise', 
@@ -639,33 +654,36 @@ async def enrich_stories_with_ai(
             
             system_prompt = """Extract key information from this article for an AI Product Manager's morning briefing.
 
-Format as scannable bullet points - not paragraphs. Be specific and direct.
-
 Provide JSON with these fields:
 
 {
-  "tldr": "One sentence: what happened and why it matters to an AI PM",
   "key_points": [
-    "3-5 bullets covering the most important facts:",
-    "- Main announcements, findings, or updates",
-    "- Technical details (architecture, methodology, performance)",
-    "- Business implications or strategic insights",
-    "- Specific metrics, timelines, names, quotes"
+    "3-4 SHORT bullets (max 25-30 words each)"
   ],
-  "context": [
-    "1-2 bullets providing background (optional, skip if not needed):",
-    "- What problem this solves or why it matters now",
-    "- Who this affects"
-  ]
+  "context": "1 sentence of background (only if needed, otherwise empty string)"
 }
 
+WRITING STYLE:
+- Write like a news wire: tight, punchy, no fluff
+- Cut filler words: "in order to" → "to", "due to the fact that" → "because"
+- Use fragments when clearer: "Only enterprise tier affected."
+- Parentheticals for secondary info: "launched Monday (GA next month)"
+
+STRUCTURE:
+- First bullet = main news (what happened, who, when)
+- Following bullets = key details, numbers, implications
+- Combine related points - don't split across bullets
+
+BULLET LIMITS:
+- 3-4 bullets total
+- MAX 25-30 words per bullet (aim for 20-25)
+- If a bullet is over 30 words, split it or cut words
+
 RULES:
-- Be specific: Include numbers, dates, names, tools, metrics
-- Be direct: State facts, don't narrate ("OpenAI released X" not "The article discusses how OpenAI released X")
-- Be concise: Each bullet = 1-2 sentences max
-- Focus on actionable intelligence and concrete details
-- Skip fluff, meta-commentary, and filler
-- Context is optional - only include if it adds value"""
+- Include specific numbers, dates, names
+- State facts directly ("Google launched X" not "Google has announced the launch of X")
+- No redundancy between bullets
+- First bullet should work as standalone summary"""
             
             if article_text:
                 user_content = f"Extract key points from this article:\n\nTitle: {story['title']}\n\nArticle Text:\n{article_text}"
@@ -689,9 +707,8 @@ RULES:
             
             enriched_story = {
                 **story,
-                'tldr': ai_analysis.get('tldr', ''),
                 'key_points': ai_analysis.get('key_points', []),
-                'context': ai_analysis.get('context', []),
+                'context': ai_analysis.get('context', ''),
                 'enriched': True
             }
             
@@ -701,10 +718,10 @@ RULES:
                 
                 # Format insight text from bullet points
                 key_points_text = "\n".join([f"• {point}" for point in enriched_story.get('key_points', [])])
-                context_text = "\n".join([f"• {item}" for item in enriched_story.get('context', [])])
-                insight_text = f"TL;DR: {enriched_story.get('tldr', '')}\n\nKey Points:\n{key_points_text}"
-                if context_text:
-                    insight_text += f"\n\nContext:\n{context_text}"
+                context = enriched_story.get('context', '')
+                insight_text = f"Key Points:\n{key_points_text}"
+                if context:
+                    insight_text += f"\n\nContext: {context}"
                 
                 CacheService.save_content_and_insight(
                     source_type="newsletter",
@@ -730,9 +747,8 @@ RULES:
             logger.error(f"Traceback: {traceback.format_exc()}")
             return {
                 **story,
-                'tldr': story.get('brief_description', ''),
-                'key_points': [],
-                'context': [],
+                'key_points': [story.get('brief_description', '')] if story.get('brief_description') else [],
+                'context': '',
                 'enriched': False,
                 'error': str(e)
             }
