@@ -2,6 +2,8 @@
 
 An automated daily briefing system that curates AI articles, summarizes podcasts, and processes newsletters to deliver a personalized morning update every weekday at 9:30 AM ET.
 
+![Pipeline Architecture](pipeline_architecture.png)
+
 ## 📋 What It Does
 
 This system automatically:
@@ -39,46 +41,6 @@ As an AI Product Manager, staying current on AI developments is critical. Howeve
 - Podcasts are transcribed and summarized with key takeaways
 - Cross-content deduplication prevents redundant information
 - Everything arrives in one email at a consistent time
-
-## 🏗️ Technical Architecture
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                       DATA SOURCES                           │
-│  Exa Search  │  Gmail API (Newsletter)  │  RSS Feeds (Podcasts) │
-└──────┬───────┴──────────┬───────────────┴─────────┬─────────┘
-       │                  │                         │
-       ▼                  ▼                         ▼
-┌─────────────────┐  ┌──────────────┐  ┌──────────────────────┐
-│ 3 Search Agents │  │  Newsletter   │  │  Podcast Processing  │
-│  (LangGraph)    │  │  Processing   │  │  • Fetch RSS         │
-│ • Conversational│  │  • Parse HTML │  │  • Download MP3      │
-│ • General AI    │  │  • Extract    │  │  • Transcribe (AAI)  │
-│ • Research      │  │    articles   │  │  • Cache transcripts │
-└────────┬────────┘  └───────┬──────┘  └──────────┬───────────┘
-         │                   │                     │
-         └───────────────────┼─────────────────────┘
-                             ▼
-                  ┌──────────────────────┐
-                  │   AI Evaluation       │
-                  │   • GPT-4o-mini       │
-                  │   • 4-criteria scoring│
-                  │   • Deduplication     │
-                  └──────────┬───────────┘
-                             │
-                  ┌──────────▼───────────┐
-                  │  Supabase (Postgres) │
-                  │  • Content cache      │
-                  │  • Insights           │
-                  │  • Dedup checking     │
-                  └──────────┬───────────┘
-                             │
-                  ┌──────────▼───────────┐
-                  │   Email Delivery      │
-                  │   Mon-Fri @ 9:30 AM   │
-                  │   (GitHub Actions)    │
-                  └──────────────────────┘
-```
 
 ## ✨ Key Features
 
